@@ -16,13 +16,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18" # Use your Node.js version
+          node-version: "18"
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
+        working-directory: ./package
         run: npm install
 
       - name: Publish to npm
+        working-directory: ./package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         run: npm publish
