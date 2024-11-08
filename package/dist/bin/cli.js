@@ -7752,10 +7752,9 @@ async function main() {
     );
     process.exit(1);
   }
-  const projectRoot = path3.resolve(__dirname, "../../../");
-  config2.rootDirectory = path3.resolve(projectRoot, config2.rootDirectory);
+  config2.rootDirectory = path3.resolve(process.cwd(), config2.rootDirectory);
   config2.snippetOutputDirectory = path3.resolve(
-    projectRoot,
+    process.cwd(),
     config2.snippetOutputDirectory
   );
   if (args.includes("clear")) {

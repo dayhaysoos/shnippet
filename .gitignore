@@ -4,7 +4,9 @@
 
 # TypeScript output
 dist/
-*.js
+
+**/snippets/
+
 
 # Logs
 logs

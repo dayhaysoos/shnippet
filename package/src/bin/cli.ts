@@ -28,10 +28,9 @@ async function main() {
     process.exit(1);
   }
 
-  const projectRoot = path.resolve(__dirname, "../../../");
-  config.rootDirectory = path.resolve(projectRoot, config.rootDirectory);
+  config.rootDirectory = path.resolve(process.cwd(), config.rootDirectory);
   config.snippetOutputDirectory = path.resolve(
-    projectRoot,
+    process.cwd(),
     config.snippetOutputDirectory
   );
 
@@ -41,6 +40,7 @@ async function main() {
     return;
   }
 
+  // Handle the --structure flag
   const structureFlagIndex = args.indexOf("--structure");
   if (structureFlagIndex !== -1 && args.length > structureFlagIndex + 1) {
     const structureValue = args[structureFlagIndex + 1];
