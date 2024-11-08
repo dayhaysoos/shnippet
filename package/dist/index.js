@@ -151,13 +151,14 @@ var SnippetExtractor = class {
   determineOutputPath(snippetName, fullPath) {
     const extension = path.extname(fullPath);
     const language = this.getLanguageFromExtension(extension);
-    const version = this.config.version || "v1";
-    return path.join(
+    const version = this.config.version;
+    const outputPathParts = [
       this.config.snippetOutputDirectory,
-      version,
+      ...version ? [version] : [],
       language,
       `${snippetName}.snippet.js`
-    );
+    ];
+    return path.join(...outputPathParts);
   }
   getLanguageFromExtension(extension) {
     const extensionToLanguageMap = {
