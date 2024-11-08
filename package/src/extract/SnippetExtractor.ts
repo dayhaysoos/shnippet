@@ -13,7 +13,7 @@ interface SnippetExtractorConfig {
     prependEnd: string;
   };
   outputDirectoryStructure: string;
-  version: string;
+  version?: string;
 }
 
 export class SnippetExtractor {
@@ -220,14 +220,16 @@ export class SnippetExtractor {
   private determineOutputPath(snippetName: string, fullPath: string) {
     const extension = path.extname(fullPath);
     const language = this.getLanguageFromExtension(extension);
-    const version = this.config.version || "v1";
+    const version = this.config.version;
 
-    return path.join(
+    const outputPathParts = [
       this.config.snippetOutputDirectory,
-      version,
+      ...(version ? [version] : []),
       language,
-      `${snippetName}.snippet.js`
-    );
+      `${snippetName}.snippet.js`,
+    ];
+
+    return path.join(...outputPathParts);
   }
 
   private getLanguageFromExtension(extension: string): string {
