@@ -3,37 +3,35 @@ import fs from "fs";
 import path from "path";
 import { rimraf } from "rimraf";
 import { fileURLToPath } from "url";
-import { config as rawConfig } from "../../shnip.config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const projectRoot = path.resolve(__dirname, "../../../");
-const config = {
-  ...rawConfig,
-  rootDirectory: path.resolve(projectRoot, rawConfig.rootDirectory),
-  snippetOutputDirectory: path.resolve(
-    projectRoot,
-    rawConfig.snippetOutputDirectory
-  ),
-};
+let config;
 
-function clearOutputDirectory(snippetOutputDirectory: string) {
-  if (fs.existsSync(snippetOutputDirectory)) {
-    rimraf.sync(snippetOutputDirectory);
-  } else {
-    console.log(`Output directory does not exist: ${snippetOutputDirectory}`);
-  }
+async function loadConfig(configPath: string) {
+  const configModule = await import(configPath);
+  return configModule.config;
 }
 
 async function main() {
   const args = process.argv.slice(2);
 
-  // Resolve the root and snippet output directories from the config
-  config.rootDirectory = path.resolve(__dirname, "../", config.rootDirectory);
+  const configFlagIndex = args.indexOf("--config");
+  if (configFlagIndex !== -1 && args.length > configFlagIndex + 1) {
+    const configPath = path.resolve(process.cwd(), args[configFlagIndex + 1]);
+    config = await loadConfig(configPath);
+  } else {
+    console.error(
+      "Error: --config flag is required. Please specify a config file path."
+    );
+    process.exit(1);
+  }
+
+  const projectRoot = path.resolve(__dirname, "../../../");
+  config.rootDirectory = path.resolve(projectRoot, config.rootDirectory);
   config.snippetOutputDirectory = path.resolve(
-    __dirname,
-    "../",
+    projectRoot,
     config.snippetOutputDirectory
   );
 
@@ -67,6 +65,14 @@ async function main() {
   // Use SnippetExtractor with the config
   const extractor = new SnippetExtractor(config);
   extractor.extractSnippets();
+}
+
+function clearOutputDirectory(snippetOutputDirectory: string) {
+  if (fs.existsSync(snippetOutputDirectory)) {
+    rimraf.sync(snippetOutputDirectory);
+  } else {
+    console.log(`Output directory does not exist: ${snippetOutputDirectory}`);
+  }
 }
 
 main();

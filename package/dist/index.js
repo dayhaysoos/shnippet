@@ -2,7 +2,7 @@
 import path from "path";
 import fs from "fs";
 var SnippetExtractor = class {
-  constructor(config3) {
+  constructor(config2) {
     this.prependBlocks = {};
     if (typeof window !== "undefined") {
       throw new Error(
@@ -10,8 +10,8 @@ var SnippetExtractor = class {
       );
     }
     this.config = {
-      ...config3,
-      outputDirectoryStructure: config3.outputDirectoryStructure || "byLanguage"
+      ...config2,
+      outputDirectoryStructure: config2.outputDirectoryStructure || "byLanguage"
     };
     this.projectRoot = process.cwd();
   }
@@ -184,7 +184,7 @@ var SnippetExtractor = class {
 };
 var SnippetExtractor_default = SnippetExtractor;
 
-// ../shnip.config.ts
+// shnip.config.ts
 var config = {
   rootDirectory: "./site-new/testsuites",
   snippetOutputDirectory: "./site-new/snippets",
@@ -209,8 +209,6 @@ async function getSnippet(snippetName, language = "javascript") {
   try {
     const snippetUrl = `${config.snippetOutputDirectory}/${config.version}/${language}/${snippetName}.snippet.js`;
     const response = await fetch(snippetUrl);
-    console.log("snippetUrl", snippetUrl);
-    console.log("response", response);
     if (!response.ok) {
       throw new Error(
         `Snippet not found: ${snippetName} for language: ${language}`
@@ -223,28 +221,8 @@ async function getSnippet(snippetName, language = "javascript") {
     throw error;
   }
 }
-
-// config/shnip.config.ts
-var config2 = {
-  rootDirectory: "./site-new/testsuites",
-  snippetOutputDirectory: "./site-new/snippets",
-  fileExtensions: [".js", ".ts", ".kt", ".gradle", ".xml", ".bash", ".swift"],
-  exclude: [
-    "pfiOverviewReadOfferingsJs",
-    "pfiOverviewWriteJs",
-    "pfiOverviewWriteOfferingsJs"
-  ],
-  snippetTags: {
-    start: ":snippet-start:",
-    end: ":snippet-end:",
-    prependStart: ":prepend-start:",
-    prependEnd: ":prepend-end:"
-  },
-  outputDirectoryStructure: "byLanguage",
-  version: "1.0.0"
-};
 export {
   SnippetExtractor_default as SnippetExtractor,
   getSnippet,
-  config2 as loadConfig
+  config as loadConfig
 };

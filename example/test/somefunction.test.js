@@ -1,12 +1,17 @@
 import { vitest } from "vitest";
 
-function add(a, b) {
-  return a + b;
-}
-
 vitest("add function", (test) => {
   test("should return the sum of two numbers", () => {
+    // :snippet-start: add-function
+
+    function add(a, b) {
+      return a + b;
+    }
+
     const result = add(2, 3);
+
+    return result;
+    // :snippet-end:
     test.assertEqual(result, 5);
   });
 
