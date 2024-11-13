@@ -1,7 +1,7 @@
 {
   "name": "shnip",
   "type": "module",
-  "version": "0.0.2-alpha",
+  "version": "0.0.3-alpha",
   "description": "A snippet extraction tool for various programming languages.",
   "main": "dist/index.js",
   "bin": {
