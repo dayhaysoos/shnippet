@@ -11,7 +11,7 @@ let config;
 
 async function loadConfig(configPath: string) {
   const configModule = await import(configPath);
-  return configModule.config;
+  return configModule.config || configModule.default || configModule;
 }
 
 async function main() {
