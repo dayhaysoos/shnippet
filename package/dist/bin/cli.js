@@ -7739,7 +7739,7 @@ var __dirname = path3.dirname(__filename);
 var config2;
 async function loadConfig(configPath) {
   const configModule = await import(configPath);
-  return configModule.config;
+  return configModule.config || configModule.default || configModule;
 }
 async function main() {
   const args = process.argv.slice(2);
