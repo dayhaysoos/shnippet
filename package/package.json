@@ -4,12 +4,15 @@
   "version": "0.0.3-alpha",
   "description": "A snippet extraction tool for various programming languages.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "shnippet": "dist/bin/cli.js"
   },
   "scripts": {
     "build": "node build.js",
-    "start": "node dist/src/bin/cli"
+    "start": "node dist/src/bin/cli",
+    "dev": "tsc --watch",
+    "test": "jest"
   },
   "keywords": [
     "snippet",
@@ -23,8 +26,11 @@
     "rimraf": "5.0.5"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
     "@types/node": "^22.7.4",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.25.4",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   }
