@@ -6,13 +6,13 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "shnip": "shnip --config ./shnip.config.js"
+    "shnippet": "shnippet --config ./shnippet.config.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "shnip": "link:/Users/ndejesus/code/shnip/package",
+    "shnippet": "link:/Users/ndejesus/Code/shnippet/package",
     "vitest": "^2.1.4"
   }
 }

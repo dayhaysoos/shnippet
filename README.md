@@ -1,6 +1,6 @@
-# Shnip
+# Shnippet
 
-Shnip is a versatile code snippet extraction tool designed to help you manage and organize code snippets from your source files, particularly your test suites. It allows you to use your written tests as source code for content that gets surfaced in documentation.
+Shnippet is a versatile code snippet extraction tool designed to help you manage and organize code snippets from your source files, particularly your test suites. It allows you to use your written tests as source code for content that gets surfaced in documentation.
 
 ## Features
 
@@ -13,23 +13,23 @@ Shnip is a versatile code snippet extraction tool designed to help you manage an
 
 ## Installation
 
-Install Shnip using npm:
+Install Shnippet using npm:
 
 ```
-npm install shnip
+npm install shnippet
 ```
 
 Or with pnpm:
 
 ```
-pnpm install shnip
+pnpm install shnippet
 ```
 
 ## Getting Started
 
 ### Configuration
 
-Create a `shnip.config.ts` file in the root directory of your project:
+Create a `shnippet.config.ts` file in the root directory of your project:
 
 ```typescript
 export const config = {
@@ -76,19 +76,19 @@ import { greet } from "../src/greet";
 
 ## Extracting Snippets
 
-Use the Shnip CLI to extract snippets based on your configuration.
+Use the Shnippet CLI to extract snippets based on your configuration.
 
 ### Running the Extractor
 
 ```
-npx shnip
+npx shnippet
 ```
 
 Or add a script to your `package.json`:
 
 ```json
 "scripts": {
-  "extract-snippets": "shnip"
+  "extract-snippets": "shnippet"
 }
 ```
 
@@ -114,14 +114,14 @@ function Documentation() {
 
 ## CLI Options
 
-Shnip provides several command-line options for additional control.
+Shnippet provides several command-line options for additional control.
 
 ### Clear Output Directory
 
 Remove all extracted snippets.
 
 ```
-npx shnip clear
+npx shnippet clear
 ```
 
 ### Specify Output Structure
@@ -129,7 +129,7 @@ npx shnip clear
 Choose how snippets are organized (`flat`, `match`, `organized`, `byLanguage`).
 
 ```
-npx shnip --structure byLanguage
+npx shnippet --structure byLanguage
 ```
 
 ## API Reference
@@ -141,7 +141,7 @@ Main class responsible for extracting snippets.
 **Importing:**
 
 ```typescript
-import { SnippetExtractor } from "shnip";
+import { SnippetExtractor } from "shnippet";
 ```
 
 **Usage:**
@@ -158,7 +158,7 @@ Asynchronously retrieves a snippet's content.
 **Importing:**
 
 ```typescript
-import { getSnippet } from "shnip";
+import { getSnippet } from "shnippet";
 ```
 
 **Usage:**
@@ -216,7 +216,7 @@ test("should greet the user", () => {
 **Extract Snippets:**
 
 ```
-npx shnip
+npx shnippet
 ```
 
 **Use Extracted Snippet in Documentation:**
@@ -247,7 +247,7 @@ virtual-store-dir = "node_modules/.pnpm"
 
 ### Linking Issues
 
-To link `shnip` as a local package:
+To link `shnippet` as a local package:
 
 ```
 pnpm link --dir ./example
@@ -257,6 +257,6 @@ Or add it as a dependency in your `package.json` using a relative path:
 
 ```json
 "dependencies": {
-  "shnip": "file:../shnip"
+  "shnippet": "file:../shnippet"
 }
 ```

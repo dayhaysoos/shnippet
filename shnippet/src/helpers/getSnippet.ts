@@ -1,4 +1,4 @@
-import { config } from "../../shnip.config";
+import { config } from "../../snippet.config";
 
 export async function getSnippet(
   snippetName: string,
