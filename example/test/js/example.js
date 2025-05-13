@@ -4,12 +4,12 @@ import { something } from "somewhere";
 
 // :snippet: example1
 function hello() {
-  console.log("Hello World!");
+    console.log("Hello World!");
 }
 // :end:
 
 // :snippet: example2
 function goodbye() {
-  console.log("Goodbye World!");
+    console.log("Goodbye World!");
 }
 // :end:

@@ -1,6 +1,5 @@
-import { config } from "../../snippet.config";
-
 export async function getSnippet(
+  config: { snippetOutputDirectory: string; version: string },
   snippetName: string,
   language: string = "javascript"
 ): Promise<string> {

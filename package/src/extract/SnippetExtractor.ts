@@ -22,7 +22,7 @@ export class SnippetExtractor {
   private config: SnippetExtractorConfig;
   private prependBlocks: Record<string, string[]> = {};
   private projectRoot: string;
-  private processedSnippets: Set<string> = new Set();
+  private processedSnippets: Map<string, Set<string>> = new Map();
 
   constructor(config: SnippetExtractorConfig) {
     if (typeof window !== "undefined") {
@@ -106,6 +106,12 @@ export class SnippetExtractor {
     let currentSnippet: string | null = null;
     let currentSnippetLines: string[] = [];
     let currentPrependBlock: string[] = [];
+    const language = this.getLanguageFromExtension(path.extname(filePath));
+
+    // Initialize the Set for this language if it doesn't exist
+    if (!this.processedSnippets.has(language)) {
+      this.processedSnippets.set(language, new Set());
+    }
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -119,9 +125,9 @@ export class SnippetExtractor {
           continue;
         }
 
-        if (this.processedSnippets.has(snippetName)) {
+        if (this.processedSnippets.get(language)?.has(snippetName)) {
           console.warn(
-            `Duplicate snippet name "${snippetName}" found in ${filePath}`
+            `Duplicate snippet name "${snippetName}" found in ${filePath} for language ${language}`
           );
           continue;
         }
@@ -129,7 +135,7 @@ export class SnippetExtractor {
         currentSnippet = snippetName;
         currentSnippetLines = [];
         currentPrependBlock = this.prependBlocks[snippetName] || [];
-        this.processedSnippets.add(snippetName);
+        this.processedSnippets.get(language)?.add(snippetName);
       } else if (line.includes(endTag) && currentSnippet) {
         const normalizedContent =
           this.normalizeIndentation(currentSnippetLines);
@@ -246,8 +252,12 @@ export class SnippetExtractor {
       await fs.mkdir(outputDir, { recursive: true });
 
       for (const [snippetName, content] of Object.entries(snippets)) {
-        const snippetPath = path.join(outputDir, `${snippetName}.js`);
-        await fs.writeFile(snippetPath, content, "utf-8");
+        const snippetPath = path.join(outputDir, `${snippetName}.snippet.js`);
+        await fs.writeFile(
+          snippetPath,
+          `export default ${JSON.stringify(content)};`,
+          "utf-8"
+        );
       }
     } catch (error) {
       console.error(`Error writing snippets to ${outputDir}:`, error);
@@ -264,6 +274,7 @@ export class SnippetExtractor {
       ".gradle": "gradle",
       ".bash": "bash",
       ".xml": "xml",
+      ".py": "python",
     };
 
     return extensionToLanguageMap[extension] || "other";

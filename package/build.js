@@ -16,5 +16,7 @@ await build({
     external: ['rimraf'],
     banner: {
         js: '#!/usr/bin/env node\n'
-    }
+    },
+    sourcemap: true,
+    minify: false
 });
