@@ -1,4 +1,19 @@
-import { getSnippet } from "../helpers/getSnippet.js";
+interface SnippetConfig {
+  rootDirectory?: string;
+  snippetOutputDirectory?: string;
+  fileExtensions?: string[];
+  exclude?: string[];
+  snippetTags?: {
+    start: string;
+    end: string;
+    prependStart: string;
+    prependEnd: string;
+  };
+  outputDirectoryStructure?: "byLanguage" | "flat";
+  version?: string;
+  baseUrl?: string;
+  supportedLanguages?: string[];
+}
 
 interface SnippetManager {
   getSnippet: (name: string, language: string) => Promise<string>;
@@ -12,18 +27,32 @@ interface SnippetManager {
     options: { language: string; showLineNumbers?: boolean }
   ) => string;
   preloadSnippets: (names: string[]) => Promise<void>;
+  updateConfig: (config: Partial<SnippetConfig>) => void;
 }
 
 class SnippetManagerImpl implements SnippetManager {
   private cache: Map<string, string> = new Map();
-  private baseUrl: string;
+  private config: SnippetConfig;
 
-  constructor(baseUrl: string = "http://localhost:3000/snippets") {
-    this.baseUrl = baseUrl;
+  constructor(config: Partial<SnippetConfig> = {}) {
+    this.config = {
+      baseUrl: "http://localhost:3000/snippets",
+      supportedLanguages: ["python", "kotlin"],
+      ...config,
+    };
+  }
+
+  updateConfig(newConfig: Partial<SnippetConfig>) {
+    this.config = {
+      ...this.config,
+      ...newConfig,
+    };
+    // Clear cache when config changes
+    this.cache.clear();
   }
 
   async preloadSnippets(names: string[]): Promise<void> {
-    const languages = ["python", "kotlin"]; // This should come from config
+    const languages = this.config.supportedLanguages || ["python", "kotlin"];
     for (const name of names) {
       for (const lang of languages) {
         await this.getSnippet(name, lang);
@@ -33,42 +62,26 @@ class SnippetManagerImpl implements SnippetManager {
 
   async getSnippet(name: string, language: string): Promise<string> {
     const key = `${name}-${language}`;
+
     if (this.cache.has(key)) {
       return this.cache.get(key)!;
     }
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/${language}/${name}.snippet.js`
-      );
+      const url = `${this.config.baseUrl}/${language}/${name}.snippet.txt`;
+      console.log("Fetching from:", url);
+      const response = await fetch(url);
+      console.log("Response status:", response.status);
+      console.log("Response type:", response.type);
+
       if (!response.ok) {
         throw new Error(
           `Failed to fetch snippet: ${name} for language: ${language}`
         );
       }
-      const text = await response.text();
-      console.log("Raw snippet text:", text);
 
-      // Extract the default export from the module
-      const match = text.match(/export default (.*);/);
-      console.log("Match result:", match);
-
-      if (!match) {
-        throw new Error(`Invalid snippet format for ${name}`);
-      }
-
-      // Parse the content, handling both string and JSON formats
-      let content: string;
-      try {
-        // First try parsing as JSON (for backward compatibility)
-        content = JSON.parse(match[1]);
-        console.log("Parsed as JSON:", content);
-      } catch (e) {
-        // If that fails, use the string directly (removing quotes)
-        content = match[1].replace(/^["']|["']$/g, "");
-        console.log("Parsed as string:", content);
-      }
-
+      const content = await response.text();
+      console.log("Received content:", content);
       this.cache.set(key, content);
       return content;
     } catch (error) {
@@ -81,11 +94,10 @@ class SnippetManagerImpl implements SnippetManager {
   }
 
   getSnippetDisplayInfo(name: string) {
-    // This would normally read from a config or metadata file
-    // For now, return hardcoded info for example1
+    const languages = this.config.supportedLanguages || ["python", "kotlin"];
     return {
-      languages: ["python", "kotlin"],
-      defaultLanguage: "python",
+      languages,
+      defaultLanguage: languages[0],
       imports: {
         python: ["from typing import Any"],
         kotlin: ["import java.util.*"],
@@ -106,4 +118,5 @@ class SnippetManagerImpl implements SnippetManager {
   }
 }
 
+// Create a default instance that can be configured later
 export const snippetManager = new SnippetManagerImpl();

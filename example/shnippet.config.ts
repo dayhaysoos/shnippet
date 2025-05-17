@@ -1,0 +1,25 @@
+export const config = {
+  baseUrl: "http://localhost:3000/snippets",
+  supportedLanguages: ["python", "kotlin"],
+  outputDirectoryStructure: "byLanguage" as const,
+  version: "1.0.0",
+  rootDirectory: "./test",
+  snippetOutputDirectory: "./snippets",
+  fileExtensions: [
+    ".js",
+    ".ts",
+    ".kt",
+    ".gradle",
+    ".xml",
+    ".bash",
+    ".swift",
+    ".py",
+  ],
+  exclude: [],
+  snippetTags: {
+    start: ":snippet-start:",
+    end: ":snippet-end:",
+    prependStart: ":prepend-start:",
+    prependEnd: ":prepend-end:",
+  },
+};
