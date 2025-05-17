@@ -4,7 +4,17 @@
   "version": "0.0.3-alpha",
   "description": "A snippet extraction tool for various programming languages.",
   "main": "dist/index.js",
+  "browser": "dist/client.browser.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "node": "./dist/index.js",
+        "browser": "./dist/client.browser.js"
+      },
+      "types": "./dist/index.d.ts"
+    }
+  },
   "bin": {
     "shnippet": "dist/bin/cli.js"
   },
@@ -12,7 +22,8 @@
     "build": "node build.js",
     "start": "node dist/src/bin/cli",
     "dev": "tsc --watch",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "chmod +x dist/bin/cli.js"
   },
   "keywords": [
     "snippet",

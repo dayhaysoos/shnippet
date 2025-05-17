@@ -4,7 +4,7 @@ import { rimraf } from 'rimraf';
 // Clean dist directory
 await rimraf('dist');
 
-// Build the project
+// Build Node.js bundle
 await build({
     entryPoints: ['src/index.ts', 'src/bin/cli.ts'],
     bundle: true,
@@ -19,4 +19,18 @@ await build({
     },
     sourcemap: true,
     minify: false
+});
+
+// Build client-side bundle
+await build({
+    entryPoints: ['src/client.ts'],
+    bundle: true,
+    platform: 'browser',
+    target: ['es2020'],
+    format: 'esm',
+    outdir: 'dist',
+    outExtension: { '.js': '.browser.js' },
+    sourcemap: true,
+    minify: true,
+    globalName: 'Shnippet'
 });

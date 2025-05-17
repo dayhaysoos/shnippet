@@ -84,7 +84,12 @@ export class SnippetExtractor {
         break;
       }
 
-      const importBlock = content.substring(endOfStartTag + 1, endIndex).trim();
+      const importBlock = content
+        .substring(endOfStartTag + 1, endIndex)
+        .split("\n")
+        .filter((line) => !line.trim().startsWith("#"))
+        .join("\n")
+        .trim();
 
       snippetNames.forEach((name) => {
         if (!this.prependBlocks[name]) {
@@ -252,12 +257,8 @@ export class SnippetExtractor {
       await fs.mkdir(outputDir, { recursive: true });
 
       for (const [snippetName, content] of Object.entries(snippets)) {
-        const snippetPath = path.join(outputDir, `${snippetName}.snippet.js`);
-        await fs.writeFile(
-          snippetPath,
-          `export default ${JSON.stringify(content)};`,
-          "utf-8"
-        );
+        const snippetPath = path.join(outputDir, `${snippetName}.snippet.txt`);
+        await fs.writeFile(snippetPath, content, "utf-8");
       }
     } catch (error) {
       console.error(`Error writing snippets to ${outputDir}:`, error);

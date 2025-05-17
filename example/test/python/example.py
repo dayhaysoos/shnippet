@@ -8,6 +8,8 @@ from typing import Any
 def hello() -> None:
     print("Hello World!")
 
+    print("Another print")
+
 
 # :snippet-end:
 
