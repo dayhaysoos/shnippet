@@ -2,14 +2,14 @@
 import { something } from "somewhere";
 // :prepend-end:
 
-// :snippet: example1
+// :snippet-start: example1
 function hello() {
     console.log("Hello World!");
 }
-// :end:
+// :snippet-end: example1
 
-// :snippet: example2
+// :snippet-start: example2
 function goodbye() {
     console.log("Goodbye World!");
 }
-// :end:
+// :snippet-end: example2

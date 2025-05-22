@@ -22,7 +22,7 @@
     "build": "node build.js",
     "start": "node dist/src/bin/cli",
     "dev": "tsc --watch",
-    "test": "jest",
+    "test": "vitest",
     "postinstall": "chmod +x dist/bin/cli.js",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage"
