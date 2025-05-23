@@ -13,16 +13,16 @@ Shnippet is a versatile code snippet extraction tool designed to help you manage
 
 ## Installation
 
-Install Shnippet using npm:
+Install Shnippet as a dev dependency in your project:
 
 ```
-npm install shnippet
+npm install --save-dev shnippet
 ```
 
 Or with pnpm:
 
 ```
-pnpm install shnippet
+pnpm add -D shnippet
 ```
 
 ## Getting Started
@@ -80,36 +80,24 @@ Use the Shnippet CLI to extract snippets based on your configuration.
 
 ### Running the Extractor
 
-```
-npx shnippet
-```
-
-Or add a script to your `package.json`:
+Add a script to your `package.json`:
 
 ```json
 "scripts": {
-  "extract-snippets": "shnippet"
+  "shnippet": "shnippet --config ./shnippet.config.ts"
 }
 ```
 
 Then run:
 
 ```
-npm run extract-snippets
+npm run shnippet
 ```
 
-## Using Extracted Snippets in Documentation
+Or with pnpm:
 
-Import the extracted snippets into your documentation or application.
-
-### Example in a React Component for Documentation:
-
-```jsx
-import exampleTestSnippet from "./snippets/1.0.0/typescript/exampleTestSnippet.snippet.js";
-
-function Documentation() {
-  return <CodeBlock language="typescript">{exampleTestSnippet}</CodeBlock>;
-}
+```
+pnpm shnippet
 ```
 
 ## CLI Options
@@ -121,7 +109,7 @@ Shnippet provides several command-line options for additional control.
 Remove all extracted snippets.
 
 ```
-npx shnippet clear
+npm run shnippet -- clear
 ```
 
 ### Specify Output Structure
@@ -129,48 +117,53 @@ npx shnippet clear
 Choose how snippets are organized (`flat`, `match`, `organized`, `byLanguage`).
 
 ```
-npx shnippet --structure byLanguage
+npm run shnippet -- --structure byLanguage
 ```
 
-## API Reference
+## Error Handling
 
-### `SnippetExtractor` Class
+Shnippet provides clear error messages for common issues when extracting snippets. Here are the main error cases and how to handle them:
 
-Main class responsible for extracting snippets.
+### Missing End Tag
 
-**Importing:**
+If a snippet is missing its end tag, Shnippet will throw an error with a descriptive message:
 
-```typescript
-import { SnippetExtractor } from "shnippet";
+```
+Error: Missing end tag for snippet 'example' in file example.js
 ```
 
-**Usage:**
+### Missing Snippet Name
 
-```typescript
-const extractor = new SnippetExtractor(config);
-extractor.extractSnippets();
+If a snippet start tag is missing its name, Shnippet will throw an error:
+
+```
+Error: Missing snippet name in file example.js
 ```
 
-### `getSnippet` Function
+### Example of Proper Snippet Format
 
-Asynchronously retrieves a snippet's content.
+Here's an example of the correct format for snippets:
 
-**Importing:**
+```javascript
+// Correct format
+//:snippet-start: hello-world
+function hello() {
+  console.log("Hello, world!");
+}
+//:snippet-end:
 
-```typescript
-import { getSnippet } from "shnippet";
+// Incorrect formats that will cause errors:
+//:snippet-start:  // Missing name
+function hello() {
+  console.log("Hello, world!");
+}
+//:snippet-end:
+
+//:snippet-start: hello-world
+function hello() {
+  console.log("Hello, world!");
+}  // Missing end tag
 ```
-
-**Usage:**
-
-```typescript
-const snippetContent = await getSnippet("exampleTestSnippet", "typescript");
-```
-
-**Parameters:**
-
-- `snippetName` (string): The name of the snippet to retrieve.
-- `language` (string): The programming language of the snippet (default is `'javascript'`).
 
 ## Configuration Options
 
@@ -216,17 +209,18 @@ test("should greet the user", () => {
 **Extract Snippets:**
 
 ```
-npx shnippet
+npm run shnippet
 ```
 
 **Use Extracted Snippet in Documentation:**
 
-```jsx
-import greetTest from "./snippets/1.0.0/typescript/greetTest.snippet.js";
+The extracted snippets will be available in your `snippets` directory, organized by language. For example:
 
-function GreetTestDocs() {
-  return <CodeBlock language="typescript">{greetTest}</CodeBlock>;
-}
+```
+snippets/
+  1.0.0/
+    typescript/
+      greetTest.snippet.txt
 ```
 
 ## Troubleshooting
@@ -243,20 +237,4 @@ Alternatively, specify the virtual store directory in your `.npmrc` file:
 
 ```
 virtual-store-dir = "node_modules/.pnpm"
-```
-
-### Linking Issues
-
-To link `shnippet` as a local package:
-
-```
-pnpm link --dir ./example
-```
-
-Or add it as a dependency in your `package.json` using a relative path:
-
-```json
-"dependencies": {
-  "shnippet": "file:../shnippet"
-}
 ```
