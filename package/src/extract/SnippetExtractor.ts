@@ -16,6 +16,7 @@ interface SnippetExtractorConfig {
   };
   outputDirectoryStructure: OutputStructure;
   version?: string;
+  projectRoot?: string;
 }
 
 export class SnippetExtractor {
@@ -36,7 +37,11 @@ export class SnippetExtractor {
       ...config,
       outputDirectoryStructure: config.outputDirectoryStructure || "byLanguage",
     };
-    this.projectRoot = process.cwd();
+    this.projectRoot = config.projectRoot || process.cwd();
+  }
+
+  public getProjectRoot(): string {
+    return this.projectRoot;
   }
 
   private validateConfig(config: SnippetExtractorConfig): void {
@@ -80,14 +85,20 @@ export class SnippetExtractor {
 
       endIndex = content.indexOf(prependEnd, endOfStartTag);
       if (endIndex === -1) {
-        console.log("No matching :prepend-end: found for :prepend-start:");
         break;
       }
 
       const importBlock = content
         .substring(endOfStartTag + 1, endIndex)
         .split("\n")
-        .filter((line) => !line.trim().startsWith("#"))
+        .map((line) => {
+          const trimmedLine = line.trimStart();
+          if (trimmedLine.startsWith("//") || trimmedLine.startsWith("#")) {
+            return "";
+          }
+          return line;
+        })
+        .filter((line) => line.trim() !== "")
         .join("\n")
         .trim();
 
@@ -123,17 +134,24 @@ export class SnippetExtractor {
       const startTag = this.config.snippetTags.start;
       const endTag = this.config.snippetTags.end;
 
-      if (line.includes(startTag)) {
-        const snippetName = this.extractSnippetName(line, startTag);
+      // Simple comment stripping - just check for // or # at start
+      const strippedLine =
+        line.trimStart().startsWith("//") || line.trimStart().startsWith("#")
+          ? line
+              .trimStart()
+              .slice(line.trimStart().startsWith("//") ? 2 : 1)
+              .trimStart()
+          : line;
+
+      if (strippedLine.includes(startTag)) {
+        const snippetName = this.extractSnippetName(strippedLine, startTag);
         if (!snippetName) {
-          console.warn(`Invalid snippet name in ${filePath} at line ${i + 1}`);
-          continue;
+          throw new Error(
+            `Missing snippet name in file ${path.basename(filePath)}`
+          );
         }
 
         if (this.processedSnippets.get(language)?.has(snippetName)) {
-          console.warn(
-            `Duplicate snippet name "${snippetName}" found in ${filePath} for language ${language}`
-          );
           continue;
         }
 
@@ -141,7 +159,7 @@ export class SnippetExtractor {
         currentSnippetLines = [];
         currentPrependBlock = this.prependBlocks[snippetName] || [];
         this.processedSnippets.get(language)?.add(snippetName);
-      } else if (line.includes(endTag) && currentSnippet) {
+      } else if (strippedLine.includes(endTag) && currentSnippet) {
         const normalizedContent =
           this.normalizeIndentation(currentSnippetLines);
         const prependContent =
@@ -157,7 +175,11 @@ export class SnippetExtractor {
     }
 
     if (currentSnippet) {
-      console.warn(`Unclosed snippet "${currentSnippet}" in ${filePath}`);
+      throw new Error(
+        `Missing end tag for snippet '${currentSnippet}' in file ${path.basename(
+          filePath
+        )}`
+      );
     }
 
     return snippets;
@@ -178,20 +200,33 @@ export class SnippetExtractor {
       return Math.min(min, indent);
     }, Infinity);
 
-    // Normalize indentation
+    // Normalize indentation and strip comment markers
     return lines
-      .map((line) => line.slice(minIndent))
+      .map((line) => {
+        const strippedLine = line.slice(minIndent);
+        // Skip lines that are only comments
+        if (strippedLine.trim() === "//" || strippedLine.trim() === "#") {
+          return "";
+        }
+        // Strip comment markers if present
+        return strippedLine.trimStart().startsWith("//") ||
+          strippedLine.trimStart().startsWith("#")
+          ? strippedLine
+              .trimStart()
+              .slice(strippedLine.trimStart().startsWith("//") ? 2 : 1)
+              .trimStart()
+          : strippedLine;
+      })
+      .filter((line) => line.trim() !== "") // Remove empty lines
       .join("\n")
       .trim();
   }
 
-  private shouldExcludeFile(content: string) {
-    if (this.config.outputDirectoryStructure === "match") {
-      return this.config.exclude.some((excludeString) =>
-        content.includes(excludeString)
-      );
-    }
-    return false;
+  private shouldExcludeFile(filePath: string) {
+    const fileName = path.basename(filePath);
+    return this.config.exclude.some(
+      (excludeString) => fileName === excludeString
+    );
   }
 
   public async processDirectory(
@@ -220,7 +255,7 @@ export class SnippetExtractor {
             this.gatherSnippetNames(content);
             this.gatherImports(content);
 
-            if (!this.shouldExcludeFile(content)) {
+            if (!this.shouldExcludeFile(fullPath)) {
               const fileSnippets = this.extractSnippetsFromFile(
                 content,
                 fullPath
