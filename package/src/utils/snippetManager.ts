@@ -1,4 +1,4 @@
-interface SnippetConfig {
+export interface SnippetConfig {
   rootDirectory?: string;
   snippetOutputDirectory?: string;
   fileExtensions?: string[];
@@ -13,6 +13,7 @@ interface SnippetConfig {
   version?: string;
   baseUrl?: string;
   supportedLanguages?: string[];
+  defaultImports?: Record<string, string[]>;
 }
 
 interface SnippetManager {
@@ -26,7 +27,6 @@ interface SnippetManager {
     content: string,
     options: { language: string; showLineNumbers?: boolean }
   ) => string;
-  preloadSnippets: (names: string[]) => Promise<void>;
   updateConfig: (config: Partial<SnippetConfig>) => void;
 }
 
@@ -49,15 +49,6 @@ class SnippetManagerImpl implements SnippetManager {
     };
     // Clear cache when config changes
     this.cache.clear();
-  }
-
-  async preloadSnippets(names: string[]): Promise<void> {
-    const languages = this.config.supportedLanguages || ["python", "kotlin"];
-    for (const name of names) {
-      for (const lang of languages) {
-        await this.getSnippet(name, lang);
-      }
-    }
   }
 
   async getSnippet(name: string, language: string): Promise<string> {
@@ -95,13 +86,23 @@ class SnippetManagerImpl implements SnippetManager {
 
   getSnippetDisplayInfo(name: string) {
     const languages = this.config.supportedLanguages || ["python", "kotlin"];
+    const imports: Record<string, string[]> = {};
+
+    // Use configured imports or defaults
+    const defaultImports = this.config.defaultImports || {
+      python: ["from typing import Any"],
+      kotlin: ["import java.util.*"],
+    };
+
+    // Add imports for each supported language
+    languages.forEach((lang) => {
+      imports[lang] = defaultImports[lang] || [];
+    });
+
     return {
       languages,
       defaultLanguage: languages[0],
-      imports: {
-        python: ["from typing import Any"],
-        kotlin: ["import java.util.*"],
-      },
+      imports,
     };
   }
 
