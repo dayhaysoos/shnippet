@@ -54,4 +54,30 @@ describe("SnippetManager", () => {
     );
     expect(snippetManager["config"].exclude).toEqual(newConfig.exclude);
   });
+
+  it("Caches snippet results and reuses them", async () => {
+    // First call should make a network request
+    await snippetManager.getSnippet("test", "python");
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+
+    // Reset the fetch mock to verify it's not called again
+    vi.clearAllMocks();
+
+    // Second call should use cache
+    const snippet = await snippetManager.getSnippet("test", "python");
+    expect(snippet).toBe("print('Hello, world!')");
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it("Uses different cache keys for different languages", async () => {
+    // Fetch same snippet in different languages
+    await snippetManager.getSnippet("test", "python");
+    await snippetManager.getSnippet("test", "kotlin");
+
+    // Should have made two network requests
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+
+    // Cache should have two entries
+    expect(snippetManager["cache"].size).toBe(2);
+  });
 });

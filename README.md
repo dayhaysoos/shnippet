@@ -238,3 +238,49 @@ Alternatively, specify the virtual store directory in your `.npmrc` file:
 ```
 virtual-store-dir = "node_modules/.pnpm"
 ```
+
+## Displaying Snippets with SnippetManager
+
+The snippet manager is a utility for fetching and displaying code snippets in your frontend application. It handles caching, language-specific formatting, and imports.
+
+### Basic Usage
+
+```typescript
+import { snippetManager } from '@shnippet/core';
+
+// Get a snippet in a specific language
+const pythonCode = await snippetManager.getSnippet('my-snippet', 'python');
+
+// Get display info (available languages and imports)
+const info = snippetManager.getSnippetDisplayInfo('my-snippet');
+// Returns: { 
+//   languages: ['python', 'kotlin'],
+//   defaultLanguage: 'python',
+//   imports: { python: ['from typing import Any'] }
+// }
+```
+
+### Configuration
+
+**Note** You probably will never need to configure snippetManager, it's just available for edge-cases.
+
+You can configure the snippet manager to match your needs. This allows you to overwrite your original snippet config settings.
+
+```typescript
+snippetManager.updateConfig({
+  // Base URL for fetching snippets
+  baseUrl: 'http://your-snippet-server.com/snippets',
+  
+  // Languages to support
+  supportedLanguages: ['python', 'kotlin', 'typescript'],
+  
+  // Default imports for each language
+  defaultImports: {
+    python: ['from typing import Any'],
+    kotlin: ['import java.util.*'],
+    typescript: ['import { useState } from "react"']
+  }
+});
+```
+
+The snippet manager will cache the results, making subsequent fetches instant.
