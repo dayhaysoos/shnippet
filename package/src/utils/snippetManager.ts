@@ -27,7 +27,6 @@ interface SnippetManager {
     content: string,
     options: { language: string; showLineNumbers?: boolean }
   ) => string;
-  preloadSnippets: (names: string[]) => Promise<void>;
   updateConfig: (config: Partial<SnippetConfig>) => void;
 }
 
@@ -50,15 +49,6 @@ class SnippetManagerImpl implements SnippetManager {
     };
     // Clear cache when config changes
     this.cache.clear();
-  }
-
-  async preloadSnippets(names: string[]): Promise<void> {
-    const languages = this.config.supportedLanguages || ["python", "kotlin"];
-    for (const name of names) {
-      for (const lang of languages) {
-        await this.getSnippet(name, lang);
-      }
-    }
   }
 
   async getSnippet(name: string, language: string): Promise<string> {
