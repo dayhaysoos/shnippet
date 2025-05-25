@@ -1,4 +1,4 @@
-interface SnippetConfig {
+export interface SnippetConfig {
   rootDirectory?: string;
   snippetOutputDirectory?: string;
   fileExtensions?: string[];
@@ -13,6 +13,7 @@ interface SnippetConfig {
   version?: string;
   baseUrl?: string;
   supportedLanguages?: string[];
+  defaultImports?: Record<string, string[]>;
 }
 
 interface SnippetManager {
@@ -95,13 +96,23 @@ class SnippetManagerImpl implements SnippetManager {
 
   getSnippetDisplayInfo(name: string) {
     const languages = this.config.supportedLanguages || ["python", "kotlin"];
+    const imports: Record<string, string[]> = {};
+
+    // Use configured imports or defaults
+    const defaultImports = this.config.defaultImports || {
+      python: ["from typing import Any"],
+      kotlin: ["import java.util.*"],
+    };
+
+    // Add imports for each supported language
+    languages.forEach((lang) => {
+      imports[lang] = defaultImports[lang] || [];
+    });
+
     return {
       languages,
       defaultLanguage: languages[0],
-      imports: {
-        python: ["from typing import Any"],
-        kotlin: ["import java.util.*"],
-      },
+      imports,
     };
   }
 

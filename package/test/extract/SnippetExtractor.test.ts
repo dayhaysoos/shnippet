@@ -218,7 +218,10 @@ describe("SnippetExtractor", () => {
 
   describe("error handling", () => {
     it("should throw an error when a snippet is missing its end tag", async () => {
-      const extractor = new SnippetExtractor(config);
+      const extractor = new SnippetExtractor({
+        ...config,
+        exclude: [...config.exclude, "missing-name.js"],
+      });
       await expect(extractor.extractSnippets()).rejects.toThrow(
         "Missing end tag for snippet 'malformed' in file malformed.js"
       );
