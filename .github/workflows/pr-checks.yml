@@ -24,20 +24,25 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
+          cache-dependency-path: 'package/package-lock.json'
 
       - name: Install dependencies
+        working-directory: ./package
         run: npm ci
 
       - name: Run tests
         id: test
+        working-directory: ./package
         run: npm test
 
       - name: Format code
         id: format
+        working-directory: ./package
         run: npm run format
 
       - name: Commit formatting changes
         if: success()
+        working-directory: ./package
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -46,4 +51,5 @@ jobs:
 
       - name: Type check
         id: type-check
+        working-directory: ./package
         run: npm run type-check || (echo "TypeScript errors found" && exit 1)
