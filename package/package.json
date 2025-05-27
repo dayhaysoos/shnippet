@@ -23,7 +23,6 @@
     "start": "node dist/src/bin/cli",
     "dev": "tsc --watch",
     "test": "vitest",
-    "postinstall": "chmod +x dist/bin/cli.js",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
