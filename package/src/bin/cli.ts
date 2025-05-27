@@ -1,8 +1,8 @@
-import { SnippetExtractor } from "../index.js";
-import fs from "fs";
-import path from "path";
-import { rimraf } from "rimraf";
-import { fileURLToPath } from "url";
+import { SnippetExtractor } from '../index.js';
+import fs from 'fs';
+import path from 'path';
+import { rimraf } from 'rimraf';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,47 +17,42 @@ async function loadConfig(configPath: string) {
 async function main() {
   const args = process.argv.slice(2);
 
-  const configFlagIndex = args.indexOf("--config");
+  const configFlagIndex = args.indexOf('--config');
   if (configFlagIndex !== -1 && args.length > configFlagIndex + 1) {
     const configPath = path.resolve(process.cwd(), args[configFlagIndex + 1]);
     config = await loadConfig(configPath);
   } else {
-    console.error(
-      "Error: --config flag is required. Please specify a config file path."
-    );
+    console.error('Error: --config flag is required. Please specify a config file path.');
     process.exit(1);
   }
 
   config.rootDirectory = path.resolve(process.cwd(), config.rootDirectory);
-  config.snippetOutputDirectory = path.resolve(
-    process.cwd(),
-    config.snippetOutputDirectory
-  );
+  config.snippetOutputDirectory = path.resolve(process.cwd(), config.snippetOutputDirectory);
 
   // Check for "clear" argument to clear the output directory
-  if (args.includes("clear")) {
+  if (args.includes('clear')) {
     clearOutputDirectory(config.snippetOutputDirectory);
     return;
   }
 
   // Handle the --structure flag
-  const structureFlagIndex = args.indexOf("--structure");
+  const structureFlagIndex = args.indexOf('--structure');
   if (structureFlagIndex !== -1 && args.length > structureFlagIndex + 1) {
     const structureValue = args[structureFlagIndex + 1];
-    const validStructures = ["flat", "match", "organized", "byLanguage"];
+    const validStructures = ['flat', 'match', 'organized', 'byLanguage'];
     if (validStructures.includes(structureValue)) {
       config.outputDirectoryStructure = structureValue;
     } else {
       console.error(
         `Invalid output directory structure: '${structureValue}'. Valid options are: ${validStructures.join(
-          ", "
+          ', '
         )}`
       );
       process.exit(1);
     }
   } else if (structureFlagIndex !== -1) {
     console.error(
-      "The --structure flag requires a value. Valid options are: flat, match, organized, byLanguage"
+      'The --structure flag requires a value. Valid options are: flat, match, organized, byLanguage'
     );
     process.exit(1);
   }

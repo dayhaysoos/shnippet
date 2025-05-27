@@ -9,7 +9,7 @@ export interface SnippetConfig {
     prependStart: string;
     prependEnd: string;
   };
-  outputDirectoryStructure?: "byLanguage" | "flat";
+  outputDirectoryStructure?: 'byLanguage' | 'flat';
   version?: string;
   baseUrl?: string;
   supportedLanguages?: string[];
@@ -36,8 +36,8 @@ class SnippetManagerImpl implements SnippetManager {
 
   constructor(config: Partial<SnippetConfig> = {}) {
     this.config = {
-      baseUrl: "http://localhost:3000/snippets",
-      supportedLanguages: ["python", "kotlin"],
+      baseUrl: 'http://localhost:3000/snippets',
+      supportedLanguages: ['python', 'kotlin'],
       ...config,
     };
   }
@@ -60,38 +60,33 @@ class SnippetManagerImpl implements SnippetManager {
 
     try {
       const url = `${this.config.baseUrl}/${language}/${name}.snippet.txt`;
-      console.log("Fetching from:", url);
+      console.log('Fetching from:', url);
       const response = await fetch(url);
-      console.log("Response status:", response.status);
-      console.log("Response type:", response.type);
+      console.log('Response status:', response.status);
+      console.log('Response type:', response.type);
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to fetch snippet: ${name} for language: ${language}`
-        );
+        throw new Error(`Failed to fetch snippet: ${name} for language: ${language}`);
       }
 
       const content = await response.text();
-      console.log("Received content:", content);
+      console.log('Received content:', content);
       this.cache.set(key, content);
       return content;
     } catch (error) {
-      console.error(
-        `Error fetching snippet ${name} for language ${language}:`,
-        error
-      );
+      console.error(`Error fetching snippet ${name} for language ${language}:`, error);
       throw error;
     }
   }
 
   getSnippetDisplayInfo(name: string) {
-    const languages = this.config.supportedLanguages || ["python", "kotlin"];
+    const languages = this.config.supportedLanguages || ['python', 'kotlin'];
     const imports: Record<string, string[]> = {};
 
     // Use configured imports or defaults
     const defaultImports = this.config.defaultImports || {
-      python: ["from typing import Any"],
-      kotlin: ["import java.util.*"],
+      python: ['from typing import Any'],
+      kotlin: ['import java.util.*'],
     };
 
     // Add imports for each supported language
@@ -106,16 +101,13 @@ class SnippetManagerImpl implements SnippetManager {
     };
   }
 
-  formatSnippet(
-    content: string,
-    options: { language: string; showLineNumbers?: boolean }
-  ): string {
+  formatSnippet(content: string, options: { language: string; showLineNumbers?: boolean }): string {
     if (!options.showLineNumbers) return content;
 
     return content
-      .split("\n")
+      .split('\n')
       .map((line, i) => `${i + 1} | ${line}`)
-      .join("\n");
+      .join('\n');
   }
 }
 

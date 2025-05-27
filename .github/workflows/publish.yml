@@ -1,30 +1,31 @@
-name: Publish to npm
+name: Publish Package
 
 on:
-  push:
-    tags:
-      - "v*" # Trigger only on tags that start with 'v', e.g., v1.0.0
+  release:
+    types: [created]
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
-        working-directory: ./package
-        run: npm install
+        run: npm ci
 
-      - name: Publish to npm
-        working-directory: ./package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to NPM
         run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.SHNIPPET_NPM_TOKEN }}

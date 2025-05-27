@@ -1,1 +1,1 @@
-export { snippetManager } from "./utils/snippetManager";
+export { snippetManager } from './utils/snippetManager';

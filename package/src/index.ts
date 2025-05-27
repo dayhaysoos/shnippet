@@ -1,2 +1,2 @@
-import SnippetExtractor from "./extract/SnippetExtractor.js";
+import SnippetExtractor from './extract/SnippetExtractor.js';
 export { SnippetExtractor };
