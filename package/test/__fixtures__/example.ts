@@ -1,7 +1,7 @@
 // Example TypeScript file with snippets
 //:snippet-start: ts-hello
 function sayHello(): void {
-  console.log("Hello from TypeScript!");
+  console.log('Hello from TypeScript!');
 }
 //:snippet-end:
 
@@ -9,7 +9,7 @@ function sayHello(): void {
 class Example {
   private message: string;
   constructor() {
-    this.message = "This is a TypeScript class";
+    this.message = 'This is a TypeScript class';
   }
 
   getMessage(): string {

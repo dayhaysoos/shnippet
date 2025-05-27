@@ -1,7 +1,7 @@
-import path from "path";
-import { promises as fs } from "fs";
+import path from 'path';
+import { promises as fs } from 'fs';
 
-type OutputStructure = "flat" | "match" | "organized" | "byLanguage";
+type OutputStructure = 'flat' | 'match' | 'organized' | 'byLanguage';
 
 interface SnippetExtractorConfig {
   rootDirectory: string;
@@ -26,16 +26,14 @@ export class SnippetExtractor {
   private processedSnippets: Map<string, Set<string>> = new Map();
 
   constructor(config: SnippetExtractorConfig) {
-    if (typeof window !== "undefined") {
-      throw new Error(
-        "SnippetExtractor can only be used in a Node.js environment"
-      );
+    if (typeof window !== 'undefined') {
+      throw new Error('SnippetExtractor can only be used in a Node.js environment');
     }
 
     this.validateConfig(config);
     this.config = {
       ...config,
-      outputDirectoryStructure: config.outputDirectoryStructure || "byLanguage",
+      outputDirectoryStructure: config.outputDirectoryStructure || 'byLanguage',
     };
     this.projectRoot = config.projectRoot || process.cwd();
   }
@@ -45,13 +43,11 @@ export class SnippetExtractor {
   }
 
   private validateConfig(config: SnippetExtractorConfig): void {
-    if (!config.rootDirectory) throw new Error("rootDirectory is required");
-    if (!config.snippetOutputDirectory)
-      throw new Error("snippetOutputDirectory is required");
-    if (!config.fileExtensions?.length)
-      throw new Error("fileExtensions must not be empty");
+    if (!config.rootDirectory) throw new Error('rootDirectory is required');
+    if (!config.snippetOutputDirectory) throw new Error('snippetOutputDirectory is required');
+    if (!config.fileExtensions?.length) throw new Error('fileExtensions must not be empty');
     if (!config.snippetTags?.start || !config.snippetTags?.end) {
-      throw new Error("snippetTags must include start and end tags");
+      throw new Error('snippetTags must include start and end tags');
     }
   }
 
@@ -65,7 +61,7 @@ export class SnippetExtractor {
       if (endIndex === -1) break;
 
       const snippetNameLine = content
-        .substring(startIndex + start.length, content.indexOf("\n", startIndex))
+        .substring(startIndex + start.length, content.indexOf('\n', startIndex))
         .trim();
       startIndex = endIndex + end.length;
     }
@@ -77,7 +73,7 @@ export class SnippetExtractor {
       endIndex = 0;
 
     while ((startIndex = content.indexOf(prependStart, startIndex)) !== -1) {
-      const endOfStartTag = content.indexOf("\n", startIndex);
+      const endOfStartTag = content.indexOf('\n', startIndex);
       const snippetNamesLine = content
         .substring(startIndex + prependStart.length, endOfStartTag)
         .trim();
@@ -90,16 +86,16 @@ export class SnippetExtractor {
 
       const importBlock = content
         .substring(endOfStartTag + 1, endIndex)
-        .split("\n")
+        .split('\n')
         .map((line) => {
           const trimmedLine = line.trimStart();
-          if (trimmedLine.startsWith("//") || trimmedLine.startsWith("#")) {
-            return "";
+          if (trimmedLine.startsWith('//') || trimmedLine.startsWith('#')) {
+            return '';
           }
           return line;
         })
-        .filter((line) => line.trim() !== "")
-        .join("\n")
+        .filter((line) => line.trim() !== '')
+        .join('\n')
         .trim();
 
       snippetNames.forEach((name) => {
@@ -113,12 +109,9 @@ export class SnippetExtractor {
     }
   }
 
-  private extractSnippetsFromFile(
-    content: string,
-    filePath: string
-  ): Record<string, string> {
+  private extractSnippetsFromFile(content: string, filePath: string): Record<string, string> {
     const snippets: Record<string, string> = {};
-    const lines = content.split("\n");
+    const lines = content.split('\n');
     let currentSnippet: string | null = null;
     let currentSnippetLines: string[] = [];
     let currentPrependBlock: string[] = [];
@@ -136,19 +129,17 @@ export class SnippetExtractor {
 
       // Simple comment stripping - just check for // or # at start
       const strippedLine =
-        line.trimStart().startsWith("//") || line.trimStart().startsWith("#")
+        line.trimStart().startsWith('//') || line.trimStart().startsWith('#')
           ? line
               .trimStart()
-              .slice(line.trimStart().startsWith("//") ? 2 : 1)
+              .slice(line.trimStart().startsWith('//') ? 2 : 1)
               .trimStart()
           : line;
 
       if (strippedLine.includes(startTag)) {
         const snippetName = this.extractSnippetName(strippedLine, startTag);
         if (!snippetName) {
-          throw new Error(
-            `Missing snippet name in file ${path.basename(filePath)}`
-          );
+          throw new Error(`Missing snippet name in file ${path.basename(filePath)}`);
         }
 
         if (this.processedSnippets.get(language)?.has(snippetName)) {
@@ -160,12 +151,9 @@ export class SnippetExtractor {
         currentPrependBlock = this.prependBlocks[snippetName] || [];
         this.processedSnippets.get(language)?.add(snippetName);
       } else if (strippedLine.includes(endTag) && currentSnippet) {
-        const normalizedContent =
-          this.normalizeIndentation(currentSnippetLines);
+        const normalizedContent = this.normalizeIndentation(currentSnippetLines);
         const prependContent =
-          currentPrependBlock.length > 0
-            ? currentPrependBlock.join("\n") + "\n\n"
-            : "";
+          currentPrependBlock.length > 0 ? currentPrependBlock.join('\n') + '\n\n' : '';
 
         snippets[currentSnippet] = prependContent + normalizedContent;
         currentSnippet = null;
@@ -176,9 +164,7 @@ export class SnippetExtractor {
 
     if (currentSnippet) {
       throw new Error(
-        `Missing end tag for snippet '${currentSnippet}' in file ${path.basename(
-          filePath
-        )}`
+        `Missing end tag for snippet '${currentSnippet}' in file ${path.basename(filePath)}`
       );
     }
 
@@ -191,11 +177,11 @@ export class SnippetExtractor {
   }
 
   private normalizeIndentation(lines: string[]): string {
-    if (lines.length === 0) return "";
+    if (lines.length === 0) return '';
 
     // Find the minimum indentation
     const minIndent = lines.reduce((min, line) => {
-      if (line.trim() === "") return min;
+      if (line.trim() === '') return min;
       const indent = line.match(/^\s*/)?.[0].length ?? 0;
       return Math.min(min, indent);
     }, Infinity);
@@ -205,34 +191,28 @@ export class SnippetExtractor {
       .map((line) => {
         const strippedLine = line.slice(minIndent);
         // Skip lines that are only comments
-        if (strippedLine.trim() === "//" || strippedLine.trim() === "#") {
-          return "";
+        if (strippedLine.trim() === '//' || strippedLine.trim() === '#') {
+          return '';
         }
         // Strip comment markers if present
-        return strippedLine.trimStart().startsWith("//") ||
-          strippedLine.trimStart().startsWith("#")
+        return strippedLine.trimStart().startsWith('//') || strippedLine.trimStart().startsWith('#')
           ? strippedLine
               .trimStart()
-              .slice(strippedLine.trimStart().startsWith("//") ? 2 : 1)
+              .slice(strippedLine.trimStart().startsWith('//') ? 2 : 1)
               .trimStart()
           : strippedLine;
       })
-      .filter((line) => line.trim() !== "") // Remove empty lines
-      .join("\n")
+      .filter((line) => line.trim() !== '') // Remove empty lines
+      .join('\n')
       .trim();
   }
 
   private shouldExcludeFile(filePath: string) {
     const fileName = path.basename(filePath);
-    return this.config.exclude.some(
-      (excludeString) => fileName === excludeString
-    );
+    return this.config.exclude.some((excludeString) => fileName === excludeString);
   }
 
-  public async processDirectory(
-    directory: string,
-    relativePath = ""
-  ): Promise<void> {
+  public async processDirectory(directory: string, relativePath = ''): Promise<void> {
     const absoluteDir = path.resolve(this.projectRoot, directory);
 
     try {
@@ -244,27 +224,17 @@ export class SnippetExtractor {
           const stat = await fs.stat(fullPath);
 
           if (stat.isDirectory()) {
-            await this.processDirectory(
-              path.join(directory, item),
-              path.join(relativePath, item)
-            );
+            await this.processDirectory(path.join(directory, item), path.join(relativePath, item));
           } else if (this.config.fileExtensions.includes(path.extname(item))) {
-            const content = await fs.readFile(fullPath, "utf-8");
+            const content = await fs.readFile(fullPath, 'utf-8');
 
             this.prependBlocks = {};
             this.gatherSnippetNames(content);
             this.gatherImports(content);
 
             if (!this.shouldExcludeFile(fullPath)) {
-              const fileSnippets = this.extractSnippetsFromFile(
-                content,
-                fullPath
-              );
-              await this.writeSnippetsToFile(
-                fileSnippets,
-                fullPath,
-                relativePath
-              );
+              const fileSnippets = this.extractSnippetsFromFile(content, fullPath);
+              await this.writeSnippetsToFile(fileSnippets, fullPath, relativePath);
             }
           }
         })
@@ -293,7 +263,7 @@ export class SnippetExtractor {
 
       for (const [snippetName, content] of Object.entries(snippets)) {
         const snippetPath = path.join(outputDir, `${snippetName}.snippet.txt`);
-        await fs.writeFile(snippetPath, content, "utf-8");
+        await fs.writeFile(snippetPath, content, 'utf-8');
       }
     } catch (error) {
       console.error(`Error writing snippets to ${outputDir}:`, error);
@@ -303,30 +273,27 @@ export class SnippetExtractor {
 
   private getLanguageFromExtension(extension: string): string {
     const extensionToLanguageMap: Record<string, string> = {
-      ".js": "js",
-      ".ts": "typescript",
-      ".kt": "kt",
-      ".swift": "swift",
-      ".gradle": "gradle",
-      ".bash": "bash",
-      ".xml": "xml",
-      ".py": "python",
+      '.js': 'js',
+      '.ts': 'typescript',
+      '.kt': 'kt',
+      '.swift': 'swift',
+      '.gradle': 'gradle',
+      '.bash': 'bash',
+      '.xml': 'xml',
+      '.py': 'python',
     };
 
-    return extensionToLanguageMap[extension] || "other";
+    return extensionToLanguageMap[extension] || 'other';
   }
 
   public async extractSnippets(): Promise<void> {
-    const absoluteOutputDir = path.resolve(
-      this.projectRoot,
-      this.config.snippetOutputDirectory
-    );
+    const absoluteOutputDir = path.resolve(this.projectRoot, this.config.snippetOutputDirectory);
 
     try {
       await fs.mkdir(absoluteOutputDir, { recursive: true });
       await this.processDirectory(this.config.rootDirectory);
     } catch (error) {
-      console.error("Error extracting snippets:", error);
+      console.error('Error extracting snippets:', error);
       throw error;
     }
   }

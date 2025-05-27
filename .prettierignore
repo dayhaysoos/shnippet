@@ -1,0 +1,19 @@
+# Build output
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Snippets
+snippet/
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+
+# Cache
+.cache/
+.npm/ 
