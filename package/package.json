@@ -26,7 +26,8 @@
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [
     "snippet",
