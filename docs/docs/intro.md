@@ -2,46 +2,86 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Shnippet is a powerful tool that allows you to use your tests as content for your documentation. It ensures your code examples are always accurate, up-to-date, and working.
+
+## The Problem
+
+Have you ever:
+- Written documentation with code examples that later became outdated after a new release? (Yes)
+- Had to manually update documentation when your code changed? (Yes)
+- Wondered if your documentation examples actually work? (Yes)
+
+These are common problems in software development. Documentation often becomes stale because it's maintained separately from the code it describes.
+
+## The Solution
+
+Shnippet solves this by:
+1. **Extracting code snippets** from your test files
+2. **Validating them** through your test suite
+3. **Keeping them in sync** with your examples by letting you surface those tests in your documentation
+
+This means your documentation is:
+- Always accurate
+- Always tested
+- Always up-to-date
+
+This saves valuable time for both documentation teams and product teams:
+- Documentation writers no longer need to manually verify and update examples
+- Product teams can focus on building features instead of maintaining documentation
+- Release cycles become smoother with automatically synchronized docs
+- QA teams can trust that documentation examples have already passed tests
+
+## How It Works
+
+```typescript
+// Your test file
+describe('Math functions', () => {
+  it('should add two numbers correctly', () => {
+    const result = add(2, 3);
+    expect(result).toBe(5);
+  });
+});
+
+// Add Shnippet tags to extract the example
+describe('Math functions', () => {
+  it('should add two numbers correctly', () => {
+    // @shnippet-start
+    const result = add(2, 3);
+    // result is 5
+    // @shnippet-end
+    expect(result).toBe(5);
+  });
+});
+
+// Shnippet automatically generates this in your docs
+const result = add(2, 3);
+// result is 5
+```
+
+## Key Features
+
+- **Test-Driven Documentation**: Your examples are validated by your test suite
+- **Automatic Updates**: Documentation stays in sync with your code
+- **Multiple Formats**: Support for various programming languages and documentation formats
+- **Prepend Blocks**: Include necessary imports and setup code
+- **CLI Tool**: Easy integration into your build process
 
 ## Getting Started
 
-Get started by **creating a new site**.
+Ready to try Shnippet? Check out the [Installation](./installation) guide to get started.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+## Why Shnippet?
 
-### What you'll need
+- **Trust**: Your documentation is as reliable as your tests
+- **Efficiency**: Write once, use everywhere
+- **Maintenance**: No more manual updates
+- **Confidence**: Know your examples work
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+## Next Steps
 
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- [Installation](./installation)
+- [Quick Start](./quick-start)
+- [Configuration](./configuration)
+- [Examples](./examples)
