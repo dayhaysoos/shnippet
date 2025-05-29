@@ -24,6 +24,12 @@ export class SnippetExtractor {
   private prependBlocks: Record<string, string[]> = {};
   private projectRoot: string;
   private processedSnippets: Map<string, Set<string>> = new Map();
+  private languageToDirectory: Record<string, string> = {
+    python: 'py',
+    typescript: 'ts',
+    kotlin: 'kt',
+    javascript: 'js',
+  };
 
   constructor(config: SnippetExtractorConfig) {
     if (typeof window !== 'undefined') {
@@ -273,17 +279,18 @@ export class SnippetExtractor {
 
   private getLanguageFromExtension(extension: string): string {
     const extensionToLanguageMap: Record<string, string> = {
-      '.js': 'js',
+      '.js': 'javascript',
       '.ts': 'typescript',
-      '.kt': 'kt',
+      '.kt': 'kotlin',
+      '.py': 'python',
       '.swift': 'swift',
       '.gradle': 'gradle',
       '.bash': 'bash',
       '.xml': 'xml',
-      '.py': 'python',
     };
 
-    return extensionToLanguageMap[extension] || 'other';
+    const language = extensionToLanguageMap[extension] || 'other';
+    return this.languageToDirectory[language] || language;
   }
 
   public async extractSnippets(): Promise<void> {

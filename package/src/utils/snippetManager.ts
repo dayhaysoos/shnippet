@@ -16,13 +16,16 @@ export interface SnippetConfig {
   defaultImports?: Record<string, string[]>;
 }
 
+interface SnippetResult {
+  name: string;
+  languages: string[];
+  defaultLanguage: string;
+  imports?: Record<string, string[]>;
+  content: Record<string, string>;
+}
+
 interface SnippetManager {
-  getSnippet: (name: string, language: string) => Promise<string>;
-  getSnippetDisplayInfo: (name: string) => {
-    languages: string[];
-    defaultLanguage: string;
-    imports: Record<string, string[]>;
-  };
+  getSnippet: (name: string) => Promise<SnippetResult>;
   formatSnippet: (
     content: string,
     options: { language: string; showLineNumbers?: boolean }
@@ -31,8 +34,14 @@ interface SnippetManager {
 }
 
 class SnippetManagerImpl implements SnippetManager {
-  private cache: Map<string, string> = new Map();
+  private cache: Map<string, SnippetResult> = new Map();
   private config: SnippetConfig;
+  private languageToDirectory: Record<string, string> = {
+    python: 'py',
+    typescript: 'ts',
+    kotlin: 'kt',
+    javascript: 'js',
+  };
 
   constructor(config: Partial<SnippetConfig> = {}) {
     this.config = {
@@ -51,36 +60,13 @@ class SnippetManagerImpl implements SnippetManager {
     this.cache.clear();
   }
 
-  async getSnippet(name: string, language: string): Promise<string> {
-    const key = `${name}-${language}`;
-
-    if (this.cache.has(key)) {
-      return this.cache.get(key)!;
+  async getSnippet(name: string): Promise<SnippetResult> {
+    if (this.cache.has(name)) {
+      return this.cache.get(name)!;
     }
 
-    try {
-      const url = `${this.config.baseUrl}/${language}/${name}.snippet.txt`;
-      console.log('Fetching from:', url);
-      const response = await fetch(url);
-      console.log('Response status:', response.status);
-      console.log('Response type:', response.type);
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch snippet: ${name} for language: ${language}`);
-      }
-
-      const content = await response.text();
-      console.log('Received content:', content);
-      this.cache.set(key, content);
-      return content;
-    } catch (error) {
-      console.error(`Error fetching snippet ${name} for language ${language}:`, error);
-      throw error;
-    }
-  }
-
-  getSnippetDisplayInfo(name: string) {
     const languages = this.config.supportedLanguages || ['python', 'kotlin'];
+    const content: Record<string, string> = {};
     const imports: Record<string, string[]> = {};
 
     // Use configured imports or defaults
@@ -89,16 +75,43 @@ class SnippetManagerImpl implements SnippetManager {
       kotlin: ['import java.util.*'],
     };
 
-    // Add imports for each supported language
-    languages.forEach((lang) => {
-      imports[lang] = defaultImports[lang] || [];
-    });
+    try {
+      // Fetch content for each language
+      for (const language of languages) {
+        try {
+          // Map language names to directory names
+          const languageDir = this.languageToDirectory[language] || language;
 
-    return {
-      languages,
-      defaultLanguage: languages[0],
-      imports,
-    };
+          const url = `${this.config.baseUrl}/${languageDir}/${name}.snippet.txt`;
+          const response = await fetch(url);
+
+          if (response.ok) {
+            content[language] = await response.text();
+            // Only add imports if they exist for this language
+            if (defaultImports[language]) {
+              imports[language] = defaultImports[language];
+            }
+          }
+        } catch (error) {
+          console.error(`Error fetching ${language} snippet for ${name}:`, error);
+        }
+      }
+
+      const result: SnippetResult = {
+        name,
+        languages: Object.keys(content),
+        defaultLanguage: languages[0],
+        content,
+        // Only include imports if we have any
+        ...(Object.keys(imports).length > 0 && { imports }),
+      };
+
+      this.cache.set(name, result);
+      return result;
+    } catch (error) {
+      console.error(`Error fetching snippet ${name}:`, error);
+      throw error;
+    }
   }
 
   formatSnippet(content: string, options: { language: string; showLineNumbers?: boolean }): string {

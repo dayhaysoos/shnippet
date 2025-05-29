@@ -272,6 +272,7 @@ snippetManager.updateConfig({
   baseUrl: 'http://your-snippet-server.com/snippets',
   
   // Languages to support
+  // Note: The first language in this array will be used as the defaultLanguage
   supportedLanguages: ['python', 'kotlin', 'typescript'],
   
   // Default imports for each language
@@ -284,3 +285,18 @@ snippetManager.updateConfig({
 ```
 
 The snippet manager will cache the results, making subsequent fetches instant.
+
+### Default Language Behavior
+
+The `defaultLanguage` in the returned `SnippetResult` is always set to the first language in the `supportedLanguages` array. This means:
+
+1. The order of languages in your `supportedLanguages` configuration determines which language is used as the default
+2. This default is set regardless of whether the snippet exists in that language
+3. You can control the default language by reordering the `supportedLanguages` array
+
+For example, if you want Kotlin to be the default language, put it first in the array:
+```typescript
+snippetManager.updateConfig({
+  supportedLanguages: ['kotlin', 'python', 'typescript']  // Kotlin will be the default
+});
+```
