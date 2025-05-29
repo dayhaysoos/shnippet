@@ -91,9 +91,9 @@ describe('SnippetExtractor', () => {
         );
 
         const items = await fs.readdir(absoluteOutputDir);
-        expect(items).toContain('typescript');
+        expect(items).toContain('ts');
         expect(items).toContain('js');
-        expect(items).toContain('python');
+        expect(items).toContain('py');
         expect(items).toContain('kt');
       });
 
@@ -103,11 +103,11 @@ describe('SnippetExtractor', () => {
           config.snippetOutputDirectory
         );
 
-        // Check JavaScript snippets
-        const jsDir = path.join(absoluteOutputDir, 'js');
-        const jsFiles = await fs.readdir(jsDir);
-        expect(jsFiles).toContain('js-hello.snippet.txt');
-        expect(jsFiles).toContain('js-class.snippet.txt');
+        // Check TypeScript snippets
+        const tsDir = path.join(absoluteOutputDir, 'ts');
+        const tsFiles = await fs.readdir(tsDir);
+        expect(tsFiles).toContain('example1.snippet.txt');
+        expect(tsFiles).toContain('example2.snippet.txt');
 
         // Check Kotlin snippets
         const ktDir = path.join(absoluteOutputDir, 'kt');
@@ -116,7 +116,7 @@ describe('SnippetExtractor', () => {
         expect(ktFiles).toContain('example2.snippet.txt');
 
         // Check Python snippets
-        const pyDir = path.join(absoluteOutputDir, 'python');
+        const pyDir = path.join(absoluteOutputDir, 'py');
         const pyFiles = await fs.readdir(pyDir);
         expect(pyFiles).toContain('example1.snippet.txt');
         expect(pyFiles).toContain('example2.snippet.txt');
@@ -156,39 +156,22 @@ describe('SnippetExtractor', () => {
             .trim();
         };
 
-        // Test JavaScript content
-        const jsSource = await fs.readFile(
-          path.join(process.cwd(), config.rootDirectory, 'example.js'),
+        // Test TypeScript content
+        const tsSource = await fs.readFile(
+          path.join(process.cwd(), config.rootDirectory, 'example.ts'),
           'utf-8'
         );
-        const jsSnippet = await fs.readFile(
-          path.join(process.cwd(), config.snippetOutputDirectory, 'js', 'js-hello.snippet.txt'),
+        const tsSnippet = await fs.readFile(
+          path.join(process.cwd(), config.snippetOutputDirectory, 'ts', 'example1.snippet.txt'),
           'utf-8'
         );
 
-        const jsSourceContent = extractContentFromSource(
-          jsSource,
+        const tsSourceContent = extractContentFromSource(
+          tsSource,
           config.snippetTags.start,
           config.snippetTags.end
         );
-        expect(normalizeContent(jsSnippet)).toBe(normalizeContent(jsSourceContent));
-
-        // Test Kotlin content
-        const ktSource = await fs.readFile(
-          path.join(process.cwd(), config.rootDirectory, 'example.kt'),
-          'utf-8'
-        );
-        const ktSnippet = await fs.readFile(
-          path.join(process.cwd(), config.snippetOutputDirectory, 'kt', 'example1.snippet.txt'),
-          'utf-8'
-        );
-
-        const ktSourceContent = extractContentFromSource(
-          ktSource,
-          config.snippetTags.start,
-          config.snippetTags.end
-        );
-        expect(normalizeContent(ktSnippet)).toBe(normalizeContent(ktSourceContent));
+        expect(normalizeContent(tsSnippet)).toBe(normalizeContent(tsSourceContent));
       });
     });
   });

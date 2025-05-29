@@ -1,18 +1,16 @@
-// Example JavaScript file with snippets
-//:snippet-start: js-hello
-function sayHello() {
-  console.log('Hello from JavaScript!');
-}
-//:snippet-end:
+// :prepend-start: example1
+// JavaScript doesn't need any default imports
+// :prepend-end:
 
-//:snippet-start: js-class
-class Example {
-  constructor() {
-    this.message = 'This is a JavaScript class';
-  }
-
-  getMessage() {
-    return this.message;
-  }
+// :snippet-start: example1
+function hello() {
+    console.log("Hello World!");
+    console.log("Another print");
 }
-//:snippet-end:
+// :snippet-end:
+
+// :snippet-start: example2
+function goodbye() {
+    console.log("Goodbye World!");
+}
+// :snippet-end: 

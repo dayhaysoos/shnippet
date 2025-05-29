@@ -1,11 +1,11 @@
 // Example TypeScript file with snippets
-//:snippet-start: ts-hello
+//:snippet-start: example1
 function sayHello(): void {
   console.log('Hello from TypeScript!');
 }
 //:snippet-end:
 
-//:snippet-start: ts-class
+//:snippet-start: example2
 class Example {
   private message: string;
   constructor() {
