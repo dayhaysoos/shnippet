@@ -10,4 +10,6 @@ export const config = {
     prependEnd: ":prepend-end:",
   },
   outputDirectoryStructure: "byLanguage",
+  baseUrl: "http://localhost:3000",
+  supportedLanguages: ["python", "kotlin", "javascript"]
 };
