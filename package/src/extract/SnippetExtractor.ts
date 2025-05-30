@@ -1,5 +1,6 @@
 import path from 'path';
 import { promises as fs } from 'fs';
+import { generateSnippetTypes } from './typeGenerator';
 
 type OutputStructure = 'flat' | 'match' | 'organized' | 'byLanguage';
 
@@ -299,6 +300,9 @@ export class SnippetExtractor {
     try {
       await fs.mkdir(absoluteOutputDir, { recursive: true });
       await this.processDirectory(this.config.rootDirectory);
+
+      // After extracting snippets, generate types
+      await generateSnippetTypes(this.config.rootDirectory, this.config.snippetOutputDirectory);
     } catch (error) {
       console.error('Error extracting snippets:', error);
       throw error;

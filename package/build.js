@@ -1,22 +1,14 @@
 import { build } from 'esbuild';
-import { rimraf } from 'rimraf';
 
-// Clean dist directory
-await rimraf('dist');
-
-// Build Node.js bundle
+// Build Node.js CLI bundle
 await build({
-  entryPoints: ['src/index.ts', 'src/bin/cli.ts'],
+  entryPoints: ['src/bin/cli.ts'],
   bundle: true,
   platform: 'node',
   target: 'node18',
   format: 'esm',
-  outdir: 'dist',
-  outExtension: { '.js': '.js' },
-  external: ['rimraf'],
-  banner: {
-    js: '#!/usr/bin/env node\n',
-  },
+  outdir: 'dist/bin',
+  banner: { js: '#!/usr/bin/env node\n' },
   sourcemap: true,
   minify: false,
 });
@@ -33,4 +25,5 @@ await build({
   sourcemap: true,
   minify: true,
   globalName: 'Shnippet',
+  external: ['fs', 'path', 'events', 'stream', 'string_decoder'],
 });
