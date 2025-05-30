@@ -48,6 +48,52 @@ export const config = {
 };
 ```
 
+## Type Safety with Generated Types
+
+Shnippet automatically generates TypeScript types for your snippet names. After running the extractor, you'll find a `gen-types` directory in your snippets folder containing type definitions.
+
+### Using Generated Types
+
+Import the `SnippetName` type in your TypeScript files:
+
+```typescript
+import type { SnippetName } from '../snippets/gen-types';
+
+// Now you get type safety and autocomplete for snippet names
+const snippetName: SnippetName = 'example1'; // ✅ Type-safe
+const invalidName: SnippetName = 'not-a-snippet'; // ❌ Type error
+```
+
+The generated types ensure you're using valid snippet names throughout your codebase.
+
+### Using with SnippetManager
+
+The generated types work seamlessly with `snippetManager`:
+
+```typescript
+import { snippetManager } from 'shnippet';
+import type { SnippetName } from '../snippets/gen-types';
+
+// Type-safe snippet fetching
+const result = await snippetManager.getSnippet('example1' as SnippetName);
+
+// Type-safe in React components
+function CodeExample() {
+  const [snippet, setSnippet] = useState<SnippetResult | null>(null);
+  
+  useEffect(() => {
+    async function loadSnippet() {
+      // TypeScript ensures you're using a valid snippet name
+      const result = await snippetManager.getSnippet('example1' as SnippetName);
+      setSnippet(result);
+    }
+    loadSnippet();
+  }, []);
+  
+  // ... rest of component
+}
+```
+
 ## Adding Snippets to Your Test Files
 
 Mark the code you want to extract using the custom snippet tags defined in your configuration. By placing these tags in your test suites, you can directly extract code examples from your tests.

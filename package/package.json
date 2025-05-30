@@ -3,23 +3,31 @@
   "type": "module",
   "version": "0.0.2-alpha",
   "description": "A snippet extraction tool for various programming languages.",
-  "main": "dist/index.js",
-  "browser": "dist/client.browser.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "browser": "./dist/client.browser.js",
+  "types": "./dist/index.d.ts",
+  "include": ["src", "types"],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": {
         "node": "./dist/index.js",
-        "browser": "./dist/client.browser.js"
+        "browser": "./dist/client.browser.js",
+        "default": "./dist/index.js"
       },
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     }
   },
   "bin": {
     "shnippet": "dist/bin/cli.js"
   },
   "scripts": {
-    "build": "node build.js",
+    "build": "tsc && node build.js",
     "start": "node dist/src/bin/cli",
     "dev": "tsc --watch",
     "test": "vitest",
@@ -38,6 +46,7 @@
   "author": "Nick DeJesus",
   "license": "MIT",
   "dependencies": {
+    "glob": "^11.0.2",
     "rimraf": "5.0.5"
   },
   "devDependencies": {

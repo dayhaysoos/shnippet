@@ -6,8 +6,15 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "strict": true,
-    "types": ["node"]
+    "types": ["node"],
+    "declaration": true,
+    "declarationDir": "./dist",
+    "outDir": "./dist",
+    "composite": true,
+    "declarationMap": true,
+    "sourceMap": true
   },
+  "include": ["src/**/*"],
   "ts-node": {
     "esm": true
   }
