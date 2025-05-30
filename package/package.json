@@ -6,7 +6,10 @@
   "main": "./dist/index.js",
   "browser": "./dist/client.browser.js",
   "types": "./dist/index.d.ts",
-  "include": ["src", "types"],
+  "include": [
+    "src",
+    "types"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
