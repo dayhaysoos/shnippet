@@ -1,20 +1,24 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { snippetManager } from 'shnippet';
 import { config } from '../shnippet.config';
+import type { SnippetResult } from 'shnippet';
+import type { SnippetName } from '../snippets/gen-types';
+
 
 // Update the snippetManager with our config
 snippetManager.updateConfig(config);
 
 function App() {
-  const [snippetResult, setSnippetResult] = useState(null);
-  const [selectedLanguage, setSelectedLanguage] = useState('');
-  const [error, setError] = useState('');
+  const [snippetResult, setSnippetResult] = useState<SnippetResult | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     async function loadSnippet() {
       try {
         // Try to load a test snippet
-        const result = await snippetManager.getSnippet('example1');
+        const result = await snippetManager.getSnippet('example1' as SnippetName);
+
         setSnippetResult(result);
         // Set initial language to the default language
         setSelectedLanguage(result.defaultLanguage);
@@ -98,10 +102,8 @@ function App() {
           {snippetResult.content[selectedLanguage]}
         </pre>
       </div>
-
-      {/* Imports Display */}
     </div>
   );
 }
 
-export default App;
+export default App; 

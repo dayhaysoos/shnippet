@@ -1,16 +1,17 @@
-// :prepend-start: example1
-// JavaScript doesn't need any default imports
-// :prepend-end:
-
-// :snippet-start: example1
-function hello() {
-    console.log("Hello World!");
-    console.log("Another print");
+"use strict";
+// Example TypeScript file with snippets
+//:snippet-start: example1
+function sayHello() {
+    console.log('Hello from TypeScript!');
 }
-// :snippet-end:
-
-// :snippet-start: example2
-function goodbye() {
-    console.log("Goodbye World!");
+//:snippet-end:
+//:snippet-start: example2
+class Example {
+    constructor() {
+        this.message = 'This is a TypeScript class';
+    }
+    getMessage() {
+        return this.message;
+    }
 }
-// :snippet-end: 
+//:snippet-end:
