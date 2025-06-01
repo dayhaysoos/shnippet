@@ -11,6 +11,7 @@ Get started with Shnippet in just a few steps.
 - Node.js 18.0 or higher
 - npm 7.0 or higher
 - A project with tests (Jest, Vitest, or other test frameworks supported)
+- TypeScript (for type generation support)
 
 ## Installation
 
@@ -72,6 +73,20 @@ Each option explained:
 }
 ```
 
+## Type Generation
+
+Shnippet automatically generates TypeScript types for your snippet names. After running the extractor, you'll find a `gen-types` directory in your snippets folder containing type definitions.
+
+Import the types in your TypeScript files:
+
+```typescript
+import type { SnippetName } from '../snippets/gen-types';
+
+// Now you get type safety and autocomplete for snippet names
+const snippetName: SnippetName = 'add'; // ✅ Type-safe
+const invalidName: SnippetName = 'not-a-snippet'; // ❌ Type error
+```
+
 ## Verify Installation
 
 Run Shnippet to verify your installation:
@@ -81,8 +96,9 @@ npm run shnippet
 ```
 
 If everything is set up correctly, you should see:
-- A new `docs/snippets` directory created
-- Generated snippet files based on your tests
+- A new `snippets` directory created with:
+  - `gen-types/index.d.ts` containing your snippet name types
+  - Generated snippet files organized by language
 - No error messages in the console
 
 ## Next Steps
@@ -104,6 +120,11 @@ If everything is set up correctly, you should see:
    - Make sure `shnippet.config.js` is in your project root
    - Verify all paths in the config are correct
    - Check that the config file exports a valid object
+
+3. **Type generation issues**
+   - Ensure TypeScript is installed in your project
+   - Check that your snippet names are valid identifiers
+   - Verify the `gen-types` directory is created in your output directory
 
 ### Getting Help
 
