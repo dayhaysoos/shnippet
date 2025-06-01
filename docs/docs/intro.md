@@ -47,17 +47,21 @@ describe('Math functions', () => {
 // Add Shnippet tags to extract the example
 describe('Math functions', () => {
   it('should add two numbers correctly', () => {
-    // @shnippet-start
+    // :snippet-start: add
     const result = add(2, 3);
     // result is 5
-    // @shnippet-end
+    // :snippet-end:
     expect(result).toBe(5);
   });
 });
 
-// Shnippet automatically generates this in your docs
+// Shnippet automatically generates:
+// 1. A snippet file in snippets/typescript/add.snippet.txt
 const result = add(2, 3);
 // result is 5
+
+// 2. Type definitions in snippets/gen-types/index.d.ts
+export type SnippetName = 'add' | 'other-snippet';
 ```
 
 ## Key Features
@@ -67,6 +71,7 @@ const result = add(2, 3);
 - **Multiple Formats**: Support for various programming languages and documentation formats
 - **Prepend Blocks**: Include necessary imports and setup code
 - **CLI Tool**: Easy integration into your build process
+- **Type Safety**: Automatically generated TypeScript types for your snippet names
 
 ## Getting Started
 
