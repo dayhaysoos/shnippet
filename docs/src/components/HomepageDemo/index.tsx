@@ -2,6 +2,7 @@ import React from 'react';
 import type { ReactNode } from 'react';
 import styles from './styles.module.css';
 import CodeBlock from '@theme/CodeBlock';
+import { snippetManager } from 'shnippet'
 
 export default function HomepageDemo(): ReactNode {
   return (
