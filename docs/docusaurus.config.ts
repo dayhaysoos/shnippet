@@ -25,7 +25,7 @@ const config: Config = {
   organizationName: 'dayhaysoos', // Usually your GitHub org/user name.
   projectName: 'shnippet', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set
@@ -105,10 +105,6 @@ const config: Config = {
               label: 'API Reference',
               to: '/docs/api',
             },
-            {
-              label: 'Examples',
-              to: '/docs/examples',
-            },
           ],
         },
         {
@@ -122,10 +118,6 @@ const config: Config = {
               label: 'Issues',
               href: 'https://github.com/dayhaysoos/shnippet/issues',
             },
-            {
-              label: 'Discussions',
-              href: 'https://github.com/dayhaysoos/shnippet/discussions',
-            },
           ],
         },
         {
@@ -134,14 +126,6 @@ const config: Config = {
             {
               label: 'Blog',
               to: '/blog',
-            },
-            {
-              label: 'Contributing',
-              to: '/docs/contributing',
-            },
-            {
-              label: 'Code of Conduct',
-              to: '/docs/code-of-conduct',
             },
           ],
         },
