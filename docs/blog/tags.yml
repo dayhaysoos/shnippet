@@ -17,3 +17,15 @@ hola:
   label: Hola
   permalink: /hola
   description: Hola tag description
+
+announcement:
+  label: Announcement
+  description: Important announcements about Shnippet
+
+release:
+  label: Release
+  description: New releases and updates
+
+tips:
+  label: Tips & Tricks
+  description: Tips and best practices
