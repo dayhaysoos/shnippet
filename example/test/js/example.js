@@ -5,6 +5,7 @@ import { something } from "somewhere";
 // :snippet-start: example1
 function hello() {
     console.log("Hello World!");
+    // testing comments
 }
 // :snippet-end: example1
 
