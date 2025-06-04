@@ -173,6 +173,25 @@ describe('SnippetExtractor', () => {
         );
         expect(normalizeContent(tsSnippet)).toBe(normalizeContent(tsSourceContent));
       });
+
+      it('should preserve comments in snippets', async () => {
+        const testContent = `
+// This is a comment about the function
+// It explains what it does
+:snippet-start:test-comments
+  // This is a comment inside the snippet
+  const result = add(2, 3);
+  // result is 5
+:snippet-end:test-comments
+        `;
+
+        const snippets = extractor['extractSnippetsFromFile'](testContent, 'test.ts');
+        const expectedContent = `// This is a comment inside the snippet
+const result = add(2, 3);
+// result is 5`;
+
+        expect(snippets['test-comments']).toBe(expectedContent);
+      });
     });
   });
 

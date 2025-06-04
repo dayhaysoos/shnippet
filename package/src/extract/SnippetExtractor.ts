@@ -193,7 +193,7 @@ export class SnippetExtractor {
       return Math.min(min, indent);
     }, Infinity);
 
-    // Normalize indentation and strip comment markers
+    // Normalize indentation and handle comments
     return lines
       .map((line) => {
         const strippedLine = line.slice(minIndent);
@@ -201,13 +201,11 @@ export class SnippetExtractor {
         if (strippedLine.trim() === '//' || strippedLine.trim() === '#') {
           return '';
         }
-        // Strip comment markers if present
-        return strippedLine.trimStart().startsWith('//') || strippedLine.trimStart().startsWith('#')
-          ? strippedLine
-              .trimStart()
-              .slice(strippedLine.trimStart().startsWith('//') ? 2 : 1)
-              .trimStart()
-          : strippedLine;
+        // Keep the line as is if it's a comment
+        if (strippedLine.trimStart().startsWith('//') || strippedLine.trimStart().startsWith('#')) {
+          return strippedLine;
+        }
+        return strippedLine;
       })
       .filter((line) => line.trim() !== '') // Remove empty lines
       .join('\n')

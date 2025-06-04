@@ -1,21 +1,12 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
     "target": "ES2020",
-    "esModuleInterop": true,
+    "module": "ESNext",
     "moduleResolution": "node",
-    "skipLibCheck": true,
-    "strict": true,
-    "types": ["node"],
+    "esModuleInterop": true,
     "declaration": true,
-    "declarationDir": "./dist",
     "outDir": "./dist",
-    "composite": true,
-    "declarationMap": true,
-    "sourceMap": true
+    "rootDir": "./src"
   },
-  "include": ["src/**/*"],
-  "ts-node": {
-    "esm": true
-  }
+  "include": ["src/**/*"]
 }
