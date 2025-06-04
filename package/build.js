@@ -1,4 +1,11 @@
 import { build } from 'esbuild';
+import { execSync } from 'child_process';
+
+// Clean dist directory
+execSync('rm -rf dist');
+
+// Generate types first
+execSync('npx tsc --declaration --emitDeclarationOnly --outDir dist --rootDir src');
 
 // Build Node.js CLI bundle
 await build({
