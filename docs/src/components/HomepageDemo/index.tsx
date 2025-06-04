@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import styles from './styles.module.css';
 import CodeBlock from '@theme/CodeBlock';
-import { snippetManager } from 'shnippet'
+import { snippetManager, SnippetResult } from 'shnippet'
+import type { SnippetName } from '../../../snippets/gen-types';
 
 export default function HomepageDemo(): ReactNode {
+  const [snippet, setSnippet] = useState<SnippetResult | null>(null);
+
+  useEffect(() => {
+    snippetManager.getSnippet('add' as SnippetName).then(setSnippet);
+  }, []);
+
+  if (!snippet) return null;
+
   return (
     <section className={styles.demo}>
       <div className="container">
@@ -34,12 +43,7 @@ describe('Math functions', () => {
             <h2 className={styles.stepTitle}>2. Generated Output</h2>
             <div className={styles.codeBlock}>
               <CodeBlock language="typescript">
-                {`// snippets/gen-types/index.d.ts
-export type SnippetName = 'add';
-
-// snippets/typescript/add.snippet.txt
-const result = add(2, 3);
-// result is 5`}
+                {snippet?.content.typescript}
               </CodeBlock>
             </div>
           </div>
