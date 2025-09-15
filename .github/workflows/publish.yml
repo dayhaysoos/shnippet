@@ -2,7 +2,11 @@ name: Publish Package
 
 on:
   release:
-    types: [created]
+    types: [published]
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -32,6 +36,14 @@ jobs:
 
       - name: Publish to NPM
         working-directory: ./package
-        run: npm publish
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          if echo "$VER" | grep -q '-'; then
+            echo "Detected prerelease version $VER -> publishing with tag 'next'"
+            npm publish --tag next --access public
+          else
+            echo "Publishing stable version $VER"
+            npm publish --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.SHNIPPET_NPM_TOKEN }}
