@@ -1,7 +1,7 @@
 {
   "name": "shnippet",
   "type": "module",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "A snippet extraction tool for various programming languages.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
