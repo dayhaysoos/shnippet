@@ -265,7 +265,7 @@ The extracted snippets will be available in your `snippets` directory, organized
 ```
 snippets/
   1.0.0/
-    typescript/
+    ts/
       greetTest.snippet.txt
 ```
 
@@ -292,18 +292,14 @@ The snippet manager is a utility for fetching and displaying code snippets in yo
 ### Basic Usage
 
 ```typescript
-import { snippetManager } from '@shnippet/core';
+import { snippetManager } from 'shnippet';
 
-// Get a snippet in a specific language
-const pythonCode = await snippetManager.getSnippet('my-snippet', 'python');
+// Fetch a snippet result (extension keys)
+const result = await snippetManager.getSnippet('my-snippet');
+// result.content.py, result.content.kt, result.content.ts
 
-// Get display info (available languages and imports)
-const info = snippetManager.getSnippetDisplayInfo('my-snippet');
-// Returns: { 
-//   languages: ['python', 'kotlin'],
-//   defaultLanguage: 'python',
-//   imports: { python: ['from typing import Any'] }
-// }
+// Default imports (if provided)
+// result.imports?.py
 ```
 
 ### Configuration
@@ -316,16 +312,15 @@ You can configure the snippet manager to match your needs. This allows you to ov
 snippetManager.updateConfig({
   // Base URL for fetching snippets
   baseUrl: 'http://your-snippet-server.com/snippets',
-  
-  // Languages to support
-  // Note: The first language in this array will be used as the defaultLanguage
-  supportedLanguages: ['python', 'kotlin', 'typescript'],
-  
-  // Default imports for each language
+
+  // Extensions to support (first entry becomes defaultLanguage)
+  fileExtensions: ['py', 'kt', 'ts'],
+
+  // Default imports for each extension key
   defaultImports: {
-    python: ['from typing import Any'],
-    kotlin: ['import java.util.*'],
-    typescript: ['import { useState } from "react"']
+    py: ['from typing import Any'],
+    kt: ['import java.util.*'],
+    ts: ['import { useState } from "react"']
   }
 });
 ```
@@ -334,15 +329,15 @@ The snippet manager will cache the results, making subsequent fetches instant.
 
 ### Default Language Behavior
 
-The `defaultLanguage` in the returned `SnippetResult` is always set to the first language in the `supportedLanguages` array. This means:
+The `defaultLanguage` in the returned `SnippetResult` is always set to the first entry in the `fileExtensions` array. This means:
 
 1. The order of languages in your `supportedLanguages` configuration determines which language is used as the default
 2. This default is set regardless of whether the snippet exists in that language
-3. You can control the default language by reordering the `supportedLanguages` array
+3. You can control the default by reordering the `fileExtensions` array
 
 For example, if you want Kotlin to be the default language, put it first in the array:
 ```typescript
 snippetManager.updateConfig({
-  supportedLanguages: ['kotlin', 'python', 'typescript']  // Kotlin will be the default
+  fileExtensions: ['kt', 'py', 'ts']  // 'kt' will be the default
 });
 ```

@@ -1,9 +1,10 @@
 {
   "name": "shnippet",
   "type": "module",
-  "version": "0.0.4-alpha",
+  "version": "0.1.0",
   "description": "A snippet extraction tool for various programming languages.",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "browser": "./dist/client.browser.js",
   "types": "./dist/index.d.ts",
   "include": [
@@ -13,25 +14,21 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": {
-        "node": "./dist/index.js",
-        "browser": "./dist/client.browser.js",
-        "default": "./dist/index.js"
-      },
-      "require": "./dist/index.js"
+      "browser": "./dist/client.browser.js",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
     },
     "./types": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js"
     }
   },
   "bin": {
     "shnippet": "dist/bin/cli.js"
   },
   "scripts": {
-    "build": "node build.js",
-    "start": "node dist/src/bin/cli",
+    "build": "node build.mjs",
+    "start": "node dist/bin/cli.js",
     "dev": "tsc --watch",
     "test": "vitest",
     "test:watch": "vitest watch",

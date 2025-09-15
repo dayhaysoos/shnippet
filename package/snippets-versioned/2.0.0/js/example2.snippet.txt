@@ -1,0 +1,8 @@
+class Example {
+  constructor() {
+    this.message = 'This is a TypeScript class';
+  }
+  getMessage() {
+    return this.message;
+  }
+}

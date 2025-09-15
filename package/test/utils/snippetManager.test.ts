@@ -13,19 +13,19 @@ describe('SnippetManager', () => {
     );
     snippetManager.updateConfig({
       exclude: ['**/malformed/**', '**/missing-name/**'],
-      supportedLanguages: ['python'],
+      fileExtensions: ['py'],
     });
   });
 
   it('Can get a snippet for a single language', async () => {
     const snippet = await snippetManager.getSnippet('test');
-    expect(snippet.content.python).toBe("print('Hello, world!')");
+    expect(snippet.content.py).toBe("print('Hello, world!')");
   });
 
   it('Returns a complete SnippetResult object', async () => {
     // Update config to support multiple languages
     snippetManager.updateConfig({
-      supportedLanguages: ['python', 'typescript', 'kotlin'],
+      fileExtensions: ['py', 'ts', 'kt'],
     });
 
     // Mock fetch to return different content for each language
@@ -56,16 +56,16 @@ describe('SnippetManager', () => {
     // Test the complete structure
     expect(result).toEqual({
       name: 'example1',
-      languages: ['python', 'typescript', 'kotlin'],
-      defaultLanguage: 'python',
+      languages: ['py', 'ts', 'kt'],
+      defaultLanguage: 'py',
       content: {
-        python: "print('Hello, world!')",
-        typescript: "console.log('Hello, world!')",
-        kotlin: "println('Hello, world!')",
+        py: "print('Hello, world!')",
+        ts: "console.log('Hello, world!')",
+        kt: "println('Hello, world!')",
       },
       imports: {
-        python: ['from typing import Any'],
-        kotlin: ['import java.util.*'],
+        py: ['from typing import Any'],
+        kt: ['import java.util.*'],
       },
     });
 
@@ -88,7 +88,7 @@ describe('SnippetManager', () => {
     // Update config with new settings
     const newConfig = {
       baseUrl: 'http://new-url.com/snippets',
-      supportedLanguages: ['typescript'],
+      fileExtensions: ['ts'],
       exclude: ['**/malformed/**', '**/missing-name/**', '**/new-exclude/**'],
     };
     snippetManager.updateConfig(newConfig);
@@ -98,7 +98,7 @@ describe('SnippetManager', () => {
 
     // Verify new config is applied
     expect(snippetManager['config'].baseUrl).toBe(newConfig.baseUrl);
-    expect(snippetManager['config'].supportedLanguages).toEqual(newConfig.supportedLanguages);
+    expect(snippetManager['config'].fileExtensions).toEqual(newConfig.fileExtensions);
     expect(snippetManager['config'].exclude).toEqual(newConfig.exclude);
   });
 
@@ -112,22 +112,22 @@ describe('SnippetManager', () => {
 
     // Second call should use cache
     const snippet = await snippetManager.getSnippet('example1');
-    expect(snippet.content.python).toBe("print('Hello, world!')");
+    expect(snippet.content.py).toBe("print('Hello, world!')");
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
   it('Fetches all languages at once and caches them', async () => {
     // Update config to support multiple languages
     snippetManager.updateConfig({
-      supportedLanguages: ['python', 'typescript', 'kotlin'],
+      fileExtensions: ['py', 'ts', 'kt'],
     });
 
     // First call should make a network request for each language
     const snippet = await snippetManager.getSnippet('example1');
     expect(global.fetch).toHaveBeenCalledTimes(3);
-    expect(snippet.content).toHaveProperty('python');
-    expect(snippet.content).toHaveProperty('typescript');
-    expect(snippet.content).toHaveProperty('kotlin');
+    expect(snippet.content).toHaveProperty('py');
+    expect(snippet.content).toHaveProperty('ts');
+    expect(snippet.content).toHaveProperty('kt');
 
     // Reset the fetch mock
     vi.clearAllMocks();
@@ -141,18 +141,18 @@ describe('SnippetManager', () => {
     expect(snippetManager['cache'].size).toBe(1);
   });
 
-  it('Uses first supported language as defaultLanguage', async () => {
+  it('Uses first file extension as defaultLanguage', async () => {
     // Test with different language orders
     const languageOrders = [
-      ['python', 'typescript', 'kotlin'],
-      ['kotlin', 'python', 'typescript'],
-      ['typescript', 'kotlin', 'python'],
+      ['py', 'ts', 'kt'],
+      ['kt', 'py', 'ts'],
+      ['ts', 'kt', 'py'],
     ];
 
     for (const languages of languageOrders) {
       // Update config with new language order
       snippetManager.updateConfig({
-        supportedLanguages: languages,
+        fileExtensions: languages,
       });
 
       // Get snippet and verify defaultLanguage
@@ -162,7 +162,7 @@ describe('SnippetManager', () => {
   });
 
   it('Handles missing languages gracefully', async () => {
-    // Mock fetch to fail for typescript
+    // Mock fetch to fail for ts
     global.fetch = vi.fn().mockImplementation((url) => {
       if (url.includes('ts')) {
         return Promise.reject(new Error('Not found'));
@@ -174,14 +174,14 @@ describe('SnippetManager', () => {
     });
 
     snippetManager.updateConfig({
-      supportedLanguages: ['python', 'typescript', 'kotlin'],
+      fileExtensions: ['py', 'ts', 'kt'],
     });
 
     const result = await snippetManager.getSnippet('example1');
 
     // Should still return a valid result with available languages
-    expect(result.languages).not.toContain('typescript');
-    expect(result.content).not.toHaveProperty('typescript');
+    expect(result.languages).not.toContain('ts');
+    expect(result.content).not.toHaveProperty('ts');
     expect(result.languages).toEqual(Object.keys(result.content));
   });
 
@@ -211,11 +211,11 @@ describe('SnippetManager', () => {
 
     // Configure with custom imports
     snippetManager.updateConfig({
-      supportedLanguages: ['python', 'typescript', 'kotlin'],
+      fileExtensions: ['py', 'ts', 'kt'],
       defaultImports: {
-        python: ['from typing import Any', 'import sys'],
-        typescript: ['import { useState } from "react"'],
-        kotlin: ['import java.util.*'],
+        py: ['from typing import Any', 'import sys'],
+        ts: ['import { useState } from "react"'],
+        kt: ['import java.util.*'],
       },
     });
 
@@ -223,9 +223,9 @@ describe('SnippetManager', () => {
 
     // Verify imports are included correctly
     expect(result.imports).toBeDefined();
-    expect(result.imports?.python).toEqual(['from typing import Any', 'import sys']);
-    expect(result.imports?.typescript).toEqual(['import { useState } from "react"']);
-    expect(result.imports?.kotlin).toEqual(['import java.util.*']);
+    expect(result.imports?.py).toEqual(['from typing import Any', 'import sys']);
+    expect(result.imports?.ts).toEqual(['import { useState } from "react"']);
+    expect(result.imports?.kt).toEqual(['import java.util.*']);
   });
 
   it('Clears cache when config changes', async () => {
@@ -239,11 +239,11 @@ describe('SnippetManager', () => {
     });
     expect(snippetManager['cache'].size).toBe(0);
 
-    // Change supportedLanguages
+    // Change fileExtensions
     await snippetManager.getSnippet('example1');
     expect(snippetManager['cache'].size).toBe(1);
     snippetManager.updateConfig({
-      supportedLanguages: ['kotlin', 'python'],
+      fileExtensions: ['kt', 'py'],
     });
     expect(snippetManager['cache'].size).toBe(0);
 
@@ -251,7 +251,7 @@ describe('SnippetManager', () => {
     await snippetManager.getSnippet('example1');
     expect(snippetManager['cache'].size).toBe(1);
     snippetManager.updateConfig({
-      defaultImports: { python: ['new import'] },
+      defaultImports: { py: ['new import'] },
     });
     expect(snippetManager['cache'].size).toBe(0);
   });
@@ -281,14 +281,14 @@ describe('SnippetManager', () => {
     });
 
     snippetManager.updateConfig({
-      supportedLanguages: ['python', 'typescript', 'kotlin'],
+      fileExtensions: ['py', 'ts', 'kt'],
     });
 
     const result = await snippetManager.getSnippet('example1');
 
     // Verify each language has its specific content
-    expect(result.content.python).toBe("print('Python content')");
-    expect(result.content.typescript).toBe("console.log('TypeScript content')");
-    expect(result.content.kotlin).toBe("println('Kotlin content')");
+    expect(result.content.py).toBe("print('Python content')");
+    expect(result.content.ts).toBe("console.log('TypeScript content')");
+    expect(result.content.kt).toBe("println('Kotlin content')");
   });
 });

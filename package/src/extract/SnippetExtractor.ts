@@ -301,6 +301,21 @@ export class SnippetExtractor {
 
       // After extracting snippets, generate types
       await generateSnippetTypes(this.config.rootDirectory, this.config.snippetOutputDirectory);
+
+      // Also emit a small runtime config for the browser to consume automatically
+      const runtimeConfig = {
+        baseUrl: (this.config as any).baseUrl ?? '/snippets',
+        fileExtensions: this.config.fileExtensions ?? ['.ts'],
+      };
+      try {
+        await fs.writeFile(
+          path.join(absoluteOutputDir, 'config.json'),
+          JSON.stringify(runtimeConfig, null, 2),
+          'utf-8'
+        );
+      } catch (e) {
+        console.error('Error writing runtime config.json:', e);
+      }
     } catch (error) {
       console.error('Error extracting snippets:', error);
       throw error;

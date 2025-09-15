@@ -23,7 +23,12 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Reference',
-      items: ['cli', 'api'],
+      items: ['cli', 'api', 'snippet-manager', 'configuration'],
+    },
+    {
+      type: 'category',
+      label: 'Tags',
+      items: ['snippet-start', 'prepend-blocks'],
     },
   ],
 

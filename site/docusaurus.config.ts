@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Shnippet',
   tagline: 'Let your tests write your docs',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon-emoji.svg',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -44,7 +44,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/dayhaysoos/shnippet/tree/main/docs/',
+          editUrl: 'https://github.com/dayhaysoos/shnippet/tree/main/site/',
         },
         blog: {
           showReadingTime: true,
@@ -54,7 +54,7 @@ const config: Config = {
           },
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/dayhaysoos/shnippet/tree/main/docs/',
+          editUrl: 'https://github.com/dayhaysoos/shnippet/tree/main/site/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -74,7 +74,7 @@ const config: Config = {
       title: 'Shnippet',
       logo: {
         alt: 'Shnippet Logo',
-        src: 'img/logo.svg',
+        src: 'img/logo-emoji.svg',
       },
       items: [
         {
