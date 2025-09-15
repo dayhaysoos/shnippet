@@ -38,12 +38,12 @@ describe('Math functions', () => {
             </div>
           </div>
 
-          {/* Step 2: Generated Output */}
+          {/* Step 2: Generated Output (ts) */}
           <div className={styles.step}>
-            <h2 className={styles.stepTitle}>2. Generated Output</h2>
+            <h2 className={styles.stepTitle}>2. Generated Output (ts)</h2>
             <div className={styles.codeBlock}>
               <CodeBlock language="typescript">
-                {snippet?.content.typescript}
+                {snippet?.content.ts}
               </CodeBlock>
             </div>
           </div>
@@ -52,18 +52,34 @@ describe('Math functions', () => {
           <div className={styles.step}>
             <h2 className={styles.stepTitle}>3. Use Snippet</h2>
             <div className={styles.codeBlock}>
-              <CodeBlock language="typescript">
+              <CodeBlock language="tsx">
                 {`import { snippetManager } from 'shnippet';
 import type { SnippetName } from '../snippets/gen-types';
 
-// Get the snippet
+// Fetch the snippet result
 const result = await snippetManager.getSnippet('add' as SnippetName);
-// result = {
-//   name: 'add',
-//   languages: ['typescript'],
-//   defaultLanguage: 'typescript',
-//   content: { typescript: 'const result = add(2, 3);' }
-// }`}
+
+// Pass it into your component (defined below in Step 4)
+<SnippetInReact result={result} />`}
+              </CodeBlock>
+            </div>
+          </div>
+
+          {/* Step 4: Render in React */}
+          <div className={styles.step}>
+            <h2 className={styles.stepTitle}>4. Render in React</h2>
+            <div className={styles.codeBlock}>
+              <CodeBlock language="tsx">
+                {`import type { SnippetResult } from 'shnippet';
+import CodeBlock from '@theme/CodeBlock';
+
+export function SnippetInReact({ result }: { result: SnippetResult }) {
+  return (
+    <CodeBlock language="typescript">
+      {result.content.ts}
+    </CodeBlock>
+  );
+}`}
               </CodeBlock>
             </div>
           </div>

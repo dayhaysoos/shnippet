@@ -30,8 +30,8 @@ module.exports = {
   // Root directory containing your source files
   rootDirectory: './src',
   
-  // Directory where snippets will be generated
-  snippetOutputDirectory: './snippets',
+  // Directory where snippets will be generated (served at /snippets)
+  snippetOutputDirectory: './static/snippets',
   
   // File extensions to process
   fileExtensions: ['.js', '.ts', '.kt', '.gradle', '.xml', '.bash', '.swift', '.py'],
@@ -96,9 +96,10 @@ npm run shnippet
 ```
 
 If everything is set up correctly, you should see:
-- A new `snippets` directory created with:
+- A new `static/snippets` directory created with:
   - `gen-types/index.d.ts` containing your snippet name types
-  - Generated snippet files organized by language
+  - `config.json` for runtime (baseUrl, fileExtensions)
+  - Generated snippet files organized by extension-derived folders (e.g., `ts/`)
 - No error messages in the console
 
 ## Next Steps

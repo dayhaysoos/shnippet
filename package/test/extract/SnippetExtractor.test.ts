@@ -195,6 +195,44 @@ const result = add(2, 3);
     });
   });
 
+  describe('versioned outputs', () => {
+    it('writes snippets under a version subfolder when version is set', async () => {
+      const versionedConfig = {
+        ...config,
+        // ensure a clean output dir
+        snippetOutputDirectory: 'snippets-versioned',
+        version: '2.0.0',
+        exclude: [...config.exclude, 'malformed.js', 'missing-name.js'],
+      };
+
+      // Clean up
+      const absoluteOutputDir = path.resolve(process.cwd(), versionedConfig.snippetOutputDirectory);
+      try {
+        await fs.rm(absoluteOutputDir, { recursive: true, force: true });
+      } catch {}
+
+      const extractor = new SnippetExtractor(versionedConfig);
+      await extractor.extractSnippets();
+
+      // Expect version folder present
+      const items = await fs.readdir(absoluteOutputDir);
+      expect(items).toContain('2.0.0');
+
+      // Expect language folders under version
+      const versionDir = path.join(absoluteOutputDir, '2.0.0');
+      const langs = await fs.readdir(versionDir);
+      expect(langs).toContain('ts');
+      expect(langs).toContain('js');
+      expect(langs).toContain('py');
+      expect(langs).toContain('kt');
+
+      // Expect files under versioned language dir
+      const tsFiles = await fs.readdir(path.join(versionDir, 'ts'));
+      expect(tsFiles).toContain('example1.snippet.txt');
+      expect(tsFiles).toContain('example2.snippet.txt');
+    });
+  });
+
   describe('error handling', () => {
     it('should throw an error when a snippet is missing its end tag', async () => {
       const extractor = new SnippetExtractor({

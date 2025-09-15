@@ -35,16 +35,16 @@ Create a `shnippet.config.js` in your project root:
 module.exports = {
   // Root directory containing your source files
   rootDirectory: './src',
-  
-  // Directory where snippets will be generated
-  snippetOutputDirectory: './snippets',
-  
+
+  // Directory where snippets will be generated (served at /snippets)
+  snippetOutputDirectory: './static/snippets',
+
   // File extensions to process
-  fileExtensions: ['.js', '.ts', '.kt', '.gradle', '.xml', '.bash', '.swift', '.py'],
-  
+  fileExtensions: ['.ts'],
+
   // Patterns to exclude from processing
   exclude: [],
-  
+
   // Custom tags for marking snippets
   snippetTags: {
     start: ':snippet-start:',
@@ -52,7 +52,7 @@ module.exports = {
     prependStart: ':prepend-start:',
     prependEnd: ':prepend-end:',
   },
-  
+
   // How to organize output files
   outputDirectoryStructure: 'byLanguage',
 };
@@ -64,13 +64,13 @@ module.exports = {
 
 ### By Language (`byLanguage`)
 ```
-snippets/
+static/snippets/
   gen-types/
     index.d.ts
-  typescript/
+  ts/
     add.snippet.txt
     multiply.snippet.txt
-  python/
+  py/
     add.snippet.txt
 ```
 
@@ -85,7 +85,7 @@ snippets/
 
 ## Type Generation
 
-The CLI automatically generates TypeScript types for your snippet names in `snippets/gen-types/index.d.ts`:
+The CLI automatically generates TypeScript types for your snippet names in `static/snippets/gen-types/index.d.ts`:
 
 ```typescript
 export type SnippetName = 'add' | 'multiply' | 'other-snippet';

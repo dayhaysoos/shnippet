@@ -44,10 +44,10 @@ This will:
 The result should look like this:
 
 ```
-snippets/
+static/snippets/
   gen-types/
     index.d.ts  # Contains your snippet name types
-  typescript/
+  ts/
     add.snippet.txt
 ```
 
@@ -68,18 +68,13 @@ import type { SnippetName } from '../snippets/gen-types';
 // Get a snippet with type safety
 const snippet = await snippetManager.getSnippet('add' as SnippetName);
 
-// Get snippet display info (available languages, imports)
-const info = snippetManager.getSnippetDisplayInfo('add');
-// info = {
-//   languages: ['typescript', 'javascript'],
-//   defaultLanguage: 'typescript',
-//   imports: { typescript: ['import { add } from "./math"'] }
-// }
+// Pick the default language
+const lang = snippet.defaultLanguage; // e.g., 'ts'
 
 // Format a snippet with line numbers
-const formattedSnippet = snippetManager.formatSnippet(snippet, {
-  language: 'typescript',
-  showLineNumbers: true
+const formattedSnippet = snippetManager.formatSnippet(snippet.content[lang], {
+  language: lang,
+  showLineNumbers: true,
 });
 ```
 

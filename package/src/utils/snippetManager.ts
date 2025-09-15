@@ -3,17 +3,16 @@ import { SnippetResult, SnippetManager, SnippetConfig } from '../types/index';
 class SnippetManagerImpl implements SnippetManager {
   private cache: Map<string, SnippetResult> = new Map();
   private config: SnippetConfig;
-  private languageToDirectory: Record<string, string> = {
-    python: 'py',
-    typescript: 'ts',
-    kotlin: 'kt',
-    javascript: 'js',
-  };
+
+  private normalizeToExtKey(id: string): string {
+    const trimmed = id.trim().toLowerCase();
+    const withoutDot = trimmed.startsWith('.') ? trimmed.slice(1) : trimmed;
+    return withoutDot; // treat value as the directory/key (e.g., ts, kt, py, swift)
+  }
 
   constructor(config: Partial<SnippetConfig> = {}) {
     this.config = {
-      baseUrl: 'http://localhost:3000/snippets',
-      supportedLanguages: ['python', 'kotlin'],
+      baseUrl: '/snippets',
       ...config,
     };
   }
@@ -28,46 +27,76 @@ class SnippetManagerImpl implements SnippetManager {
   }
 
   async getSnippet(name: string): Promise<SnippetResult> {
+    // Debug: surface current runtime config
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[shnippet] snippetManager config:', this.config);
+    } catch {}
     if (this.cache.has(name)) {
       return this.cache.get(name)!;
     }
 
-    const languages = this.config.supportedLanguages || ['python', 'kotlin'];
+    let { fileExtensions } = this.config as { fileExtensions?: string[] };
+    // If not provided, try to auto-load from /snippets/config.json once
+    if (!fileExtensions || fileExtensions.length === 0) {
+      try {
+        const res = await fetch(`${this.config.baseUrl}/config.json`);
+        if (res.ok) {
+          const cfg = await res.json();
+          if (Array.isArray(cfg.fileExtensions)) {
+            fileExtensions = cfg.fileExtensions as string[];
+            this.updateConfig({ fileExtensions });
+          }
+        }
+      } catch {}
+    }
+    if (!fileExtensions || fileExtensions.length === 0) {
+      throw new Error('shnippet: fileExtensions is required (set in shnippet.config or runtime)');
+    }
+    // Normalize configured identifiers to extension keys (e.g., 'python' → 'py', '.ts' → 'ts')
+    const extKeys = fileExtensions.map((id) => this.normalizeToExtKey(id));
     const content: Record<string, string> = {};
     const imports: Record<string, string[]> = {};
 
     // Use configured imports or defaults
-    const defaultImports = this.config.defaultImports || {
-      python: ['from typing import Any'],
-      kotlin: ['import java.util.*'],
+    const rawImports = this.config.defaultImports || {
+      py: ['from typing import Any'],
+      kt: ['import java.util.*'],
     };
+    // Normalize import map keys to extension keys
+    const defaultImports: Record<string, string[]> = {};
+    for (const key of Object.keys(rawImports)) {
+      defaultImports[this.normalizeToExtKey(key)] = rawImports[key];
+    }
 
     try {
-      // Fetch content for each language
-      for (const language of languages) {
+      // Fetch content for each configured extension key
+      for (const extKey of extKeys) {
         try {
-          // Map language names to directory names
-          const languageDir = this.languageToDirectory[language] || language;
-
-          const url = `${this.config.baseUrl}/${languageDir}/${name}.snippet.txt`;
+          const url = `${this.config.baseUrl}/${extKey}/${name}.snippet.txt`;
+          try {
+            // eslint-disable-next-line no-console
+            console.log('[shnippet] fetching snippet URL:', url);
+          } catch {}
           const response = await fetch(url);
 
           if (response.ok) {
-            content[language] = await response.text();
+            content[extKey] = await response.text();
             // Only add imports if they exist for this language
-            if (defaultImports[language]) {
-              imports[language] = defaultImports[language];
+            if (defaultImports[extKey]) {
+              imports[extKey] = defaultImports[extKey];
             }
           }
         } catch (error) {
-          console.error(`Error fetching ${language} snippet for ${name}:`, error);
+          console.error(`Error fetching ${extKey} snippet for ${name}:`, error);
         }
       }
 
       const result: SnippetResult = {
         name,
         languages: Object.keys(content),
-        defaultLanguage: languages[0],
+        // Default to the first configured extension key to reduce friction
+        defaultLanguage: extKeys[0],
         content,
         // Only include imports if we have any
         ...(Object.keys(imports).length > 0 && { imports }),

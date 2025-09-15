@@ -1,6 +1,6 @@
-export const config = {
+module.exports = {
     rootDirectory: "./tests",
-    snippetOutputDirectory: "./snippets",
+    snippetOutputDirectory: "./static/snippets",
     fileExtensions: [".js", ".ts", ".kt", ".gradle", ".xml", ".bash", ".swift", ".py"],
     exclude: [],
     snippetTags: {
@@ -10,6 +10,6 @@ export const config = {
         prependEnd: ":prepend-end:",
     },
     outputDirectoryStructure: "byLanguage",
-    baseUrl: "http://localhost:3000",
-    supportedLanguages: ["typescript"]
+    baseUrl: "/snippets",
+    fileExtensions: [".ts"]
 };

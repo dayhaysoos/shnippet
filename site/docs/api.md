@@ -4,7 +4,9 @@ sidebar_position: 5
 
 # API Reference
 
-The `snippetManager` is a utility for fetching and displaying code snippets in your frontend application. It handles caching, language-specific formatting, and imports.
+The `snippetManager` is a utility for fetching and displaying code snippets in your frontend application. It handles caching, extension-derived language selection, and optional imports.
+
+See also: [Snippet Manager](./snippet-manager.md) for a higher-level guide and examples.
 
 ## Import
 
@@ -39,26 +41,22 @@ interface SnippetResult {
 Formats a snippet with optional line numbers.
 
 ```typescript
-const formatted = snippetManager.formatSnippet(snippet, {
-  language: 'typescript',
-  showLineNumbers: true
+const formatted = snippetManager.formatSnippet(result.content[result.defaultLanguage], {
+  language: result.defaultLanguage,
+  showLineNumbers: true,
 });
 ```
 
 ### updateConfig
 
-> **Note**: You likely won't need to use this method. It's only necessary for advanced use cases like custom snippet servers or language-specific configurations.
+> **Note**: You likely won't need to use this method. Defaults are read from `/snippets/config.json` generated at build time.
 
 Updates the snippet manager configuration.
 
 ```typescript
 snippetManager.updateConfig({
-  baseUrl: 'http://your-snippet-server.com/snippets',
-  supportedLanguages: ['typescript', 'python'],
-  defaultImports: {
-    typescript: ['import { useState } from "react"'],
-    python: ['from typing import Any']
-  }
+  baseUrl: '/snippets',
+  fileExtensions: ['ts'], // use extension keys (dots optional)
 });
 ```
 
@@ -76,9 +74,9 @@ async function displaySnippet() {
   const { languages, defaultLanguage, imports, content } = result;
   
   // Format with line numbers
-  const formatted = snippetManager.formatSnippet(result, {
+  const formatted = snippetManager.formatSnippet(content[defaultLanguage], {
     language: defaultLanguage,
-    showLineNumbers: true
+    showLineNumbers: true,
   });
   
   return formatted;
@@ -101,6 +99,6 @@ const invalid = await snippetManager.getSnippet('not-a-snippet' as SnippetName);
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `baseUrl` | `string` | Base URL for fetching snippets |
-| `supportedLanguages` | `string[]` | Languages to support |
-| `defaultImports` | `Record<string, string[]>` | Default imports for each language | 
+| `baseUrl` | `string` | Base URL for fetching snippets (default `/snippets`) |
+| `fileExtensions` | `string[]` | Required at runtime (e.g., `['ts','py']`). Keys are normalized extensions without dots; defaultLanguage is the first entry. |
+| `defaultImports` | `Record<string, string[]>` | Optional imports per extension key |
