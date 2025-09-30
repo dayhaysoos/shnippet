@@ -1,7 +1,7 @@
 export const MyJSXSnippet = () => {
   return (
     <div>
-      <h1>Hello, world! Wtf is going on?</h1>
+      <h2>Hello, world! Wtf is going on?</h2>
     </div>
   );
 };
