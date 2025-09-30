@@ -5,7 +5,7 @@
 # TypeScript output
 dist/
 
-**/snippets/
+package/snippets/
 
 
 # Logs

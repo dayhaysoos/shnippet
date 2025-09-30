@@ -1,0 +1,75 @@
+{
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "almond",
+    "name": "Shnippet",
+    "favicon": "/favicon.svg",
+    "colors": {
+      "primary": "#DD2E44",
+      "light": "#DD2E44",
+      "dark": "#15803D"
+    },
+    "navigation": {
+      "global": {
+        "anchors": []
+      },
+      "groups": [
+        {
+          "group": "Getting started",
+          "pages": [
+            "index",
+            "intro",
+            "installation",
+            "quick-start"
+          ]
+        },
+        {
+          "group": "Core concepts",
+          "pages": [
+            "configuration",
+            "prepend-blocks",
+            "snippet-start",
+            "snippet-manager"
+          ]
+        },
+        {
+          "group": "References",
+          "pages": [
+            "cli",
+            "api"
+          ]
+        }
+      ]
+    },
+    "logo": {
+      "light": "/logo.svg",
+      "dark": "/logo.svg"
+    },
+    "navbar": {
+      "links": [
+        {
+          "label": "Support",
+          "href": "mailto:nick@dayhaysoos.com"
+        }
+      ]
+    },
+    "contextual": {
+      "options": [
+       "copy",
+       "view",
+       "chatgpt",
+       "claude",
+       "perplexity",
+       "mcp",
+       "cursor",
+       "vscode"
+     ]
+    },
+    "footer": {
+      "socials": {
+        "x": "https://x.com/mintlify",
+        "github": "https://github.com/mintlify",
+        "linkedin": "https://linkedin.com/company/mintlify"
+      }
+    }
+  }
+  

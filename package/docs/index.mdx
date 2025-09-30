@@ -1,0 +1,93 @@
+---
+title: Overview
+description: See how Shnippet discovers, generates, and renders code examples end-to-end.
+mode: custom
+---
+
+import { MyJSXSnippet } from './snippets/test.jsx'
+
+<MyJSXSnippet />
+
+# How Shnippet Works
+
+Shnippet keeps your docs and code samples aligned by extracting live snippets from your tests (or any source files you choose), formatting them for reuse, and exposing a lightweight runtime API you can call directly inside your documentation site.
+
+## 1. Mark the Source Code
+
+Add snippet boundaries to the parts of your codebase you want to publish. Shnippet will extract everything between `:snippet-start:` and `:snippet-end:` and normalize indentation for you.
+
+```typescript math.test.ts
+describe('Math functions', () => {
+  it('should add numbers', () => {
+    // :snippet-start: add
+    const result = add(2, 3);
+    // result is 5
+    // :snippet-end:
+    expect(result).toBe(5);
+  });
+});
+```
+
+## 2. Generate Snippet Assets
+
+Run the Shnippet CLI (or the programmatic API) to scan your project. The extractor writes language-specific `.snippet.txt` files alongside generated TypeScript definitions so you can consume snippet names safely.
+
+```bash
+pnpm shnippet
+```
+
+The output looks like:
+
+```text
+package/snippets/
+  gen-types/
+    index.d.ts
+  ts/
+    add.snippet.txt
+  py/
+    add.snippet.txt
+```
+
+## 3. Fetch Snippets in the Browser
+
+Inside your docs site, hydrate the Shnippet runtime with the same configuration you used during extraction. Then request snippets by name—the client returns a `SnippetResult` containing the available languages, default language, and raw snippet strings.
+
+```tsx
+import { snippetManager } from 'shnippet';
+import type { SnippetName } from '../snippets/gen-types';
+
+snippetManager.updateConfig({
+  baseUrl: '/snippets',
+  fileExtensions: ['ts', 'py', 'kt'],
+});
+
+const result = await snippetManager.getSnippet('add' as SnippetName);
+```
+
+## 4. Render the Snippet in React (or Any UI)
+
+Once you have a `SnippetResult`, you can pass the content to your favorite code viewer component. Below is a simple example using Mintlify's `<CodeBlock />` component, but the same approach works with any renderer.
+
+```tsx
+import type { SnippetResult } from 'shnippet';
+import CodeBlock from '@theme/CodeBlock';
+
+export function SnippetInReact({ result }: { result: SnippetResult }) {
+  return (
+    <CodeBlock language={result.defaultLanguage}>
+      {result.content[result.defaultLanguage]}
+    </CodeBlock>
+  );
+}
+```
+
+## Next Steps
+
+- Head to the [`quick-start`](./quick-start) guide to wire up your first project.
+- Explore [`configuration`](./configuration) for every available option.
+- Dive into the [`api`](./api) reference when you need runtime details.
+
+Need deeper help or run into an edge case? Open an issue any time at [github.com/dayhaysoos/shnippet](https://github.com/dayhaysoos/shnippet/issues).
+
+
+
