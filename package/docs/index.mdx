@@ -1,20 +1,25 @@
 ---
-title: Overview
-description: See how Shnippet discovers, generates, and renders code examples end-to-end.
-mode: center
+title: What is Shnippet?
 ---
 
-import { MyJSXSnippet } from './snippets/test.jsx'
+Shnippet keeps your docs and code samples aligned by extracting live snippets from your tests, formatting them for reuse, and exposing a lightweight API you can call directly inside your documentation site.
 
-<MyJSXSnippet />
+
+## Features
+
+- Extract code snippets from your codebase using simple tags
+- Support for multiple programming languages
+- TypeScript support with generated types
+- CLI and programmatic API
+- Browser and Node.js support
 
 # How Shnippet Works
 
-Shnippet keeps your docs and code samples aligned by extracting live snippets from your tests (or any source files you choose), formatting them for reuse, and exposing a lightweight runtime API you can call directly inside your documentation site.
+## 1. Tag your tests
 
-## 1. Mark the Source Code
+Add Shnippet tags to the parts of your tests that you want to publish. Shnippet will extract everything between `:snippet-start: add` and `:snippet-end:` and normalize indentation for you.
 
-Add snippet boundaries to the parts of your codebase you want to publish. Shnippet will extract everything between `:snippet-start:` and `:snippet-end:` and normalize indentation for you.
+**Note that the snippet name is `add` in this example. Any string that comes after `:snippet-start:` will be the name of the snippet.**
 
 ```typescript math.test.ts
 describe('Math functions', () => {
@@ -48,7 +53,7 @@ package/snippets/
     add.snippet.txt
 ```
 
-## 3. Fetch Snippets in the Browser
+## 3. Fetch Snippets in your docs site
 
 Inside your docs site, hydrate the Shnippet runtime with the same configuration you used during extraction. Then request snippets by name—the client returns a `SnippetResult` containing the available languages, default language, and raw snippet strings.
 
@@ -56,19 +61,15 @@ Inside your docs site, hydrate the Shnippet runtime with the same configuration 
 import { snippetManager } from 'shnippet';
 import type { SnippetName } from '../snippets/gen-types';
 
-snippetManager.updateConfig({
-  baseUrl: '/snippets',
-  fileExtensions: ['ts', 'py', 'kt'],
-});
-
 const result = await snippetManager.getSnippet('add' as SnippetName);
 ```
 
 ## 4. Render the Snippet in React (or Any UI)
 
-Once you have a `SnippetResult`, you can pass the content to your favorite code viewer component. Below is a simple example using Mintlify's `<CodeBlock />` component, but the same approach works with any renderer.
+Once you have a `SnippetResult`, you can pass the content to your favorite ```<CodeBlock />``` component.
 
 ```tsx
+// for Docusaurus
 import type { SnippetResult } from 'shnippet';
 import CodeBlock from '@theme/CodeBlock';
 

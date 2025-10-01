@@ -1,6 +1,0 @@
-import java.util.*
-
-fun hello() {
-    println("Hello World!")
-    println("Another print")
-}

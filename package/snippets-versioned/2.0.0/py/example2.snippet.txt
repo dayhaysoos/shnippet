@@ -1,2 +1,0 @@
-def goodbye() -> None:
-    print("Goodbye World!")

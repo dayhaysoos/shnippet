@@ -1,3 +1,0 @@
-fun goodbye() {
-    println("Goodbye World!")
-}

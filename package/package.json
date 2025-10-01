@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "node build.mjs",
-    "start": "node dist/bin/cli.js",
+    "start": "node dist/bin/cli.js --config shnippet.config.ts",
     "dev": "tsc --watch",
     "test": "vitest",
     "test:watch": "vitest watch",
