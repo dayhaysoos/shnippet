@@ -1,5 +1,4 @@
-import { test } from './test';
-
+import { MyJSXSnippet } from 'Test.jsx';
 // export const Shnippet = async ({ snippetName }) => {
 //   const snippet = await snippetManager.getSnippet(snippetName);
 
@@ -9,6 +8,9 @@ import { test } from './test';
 // };
 
 export const Shnippet = () => {
-  console.log(test);
-  return <div>Test</div>;
+  return (
+    <div>
+      Test <MyJSXSnippet />
+    </div>
+  );
 };
