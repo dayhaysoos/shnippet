@@ -1,4 +1,9 @@
 {
   "baseUrl": "/snippets",
-  "fileExtensions": [".js", ".ts", ".py", ".kt"]
+  "fileExtensions": [
+    ".js",
+    ".ts",
+    ".py",
+    ".kt"
+  ]
 }
