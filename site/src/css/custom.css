@@ -1,30 +1,127 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Modern Tech Blue + Soft Contrast
+ * Light: crisp neutrals with a strong blue accent
+ * Dark: midnight surfaces with lighter blue accent
  */
 
-/* You can override the default Infima variables here. */
+/* ===== Light mode ===== */
 :root {
-  --ifm-color-primary: #2563eb;
-  --ifm-color-primary-dark: #1d4ed8;
-  --ifm-color-primary-darker: #1e40af;
-  --ifm-color-primary-darkest: #1e3a8a;
-  --ifm-color-primary-light: #3b82f6;
-  --ifm-color-primary-lighter: #60a5fa;
-  --ifm-color-primary-lightest: #93c5fd;
+  /* Brand / primary */
+  --ifm-color-primary: #005FCC;               /* passes AA with white */
+  --ifm-color-primary-dark: #0051AD;
+  --ifm-color-primary-darker: #004A9E;
+  --ifm-color-primary-darkest: #003A7A;
+  --ifm-color-primary-light: #1A75E6;
+  --ifm-color-primary-lighter: #4C95F0;
+  --ifm-color-primary-lightest: #A5C6FA;
+
+  /* Ensure readable text/icon on primary backgrounds (buttons, badges, etc.) */
+  --ifm-color-primary-contrast-foreground: #FFFFFF;
+  --ifm-button-color: var(--ifm-color-primary-contrast-foreground);
+
+  /* Neutrals */
+  --ifm-background-color: #F8F9FA;            /* page */
+  --ifm-background-surface-color: #FFFFFF;    /* cards, surfaces */
+  --ifm-font-color-base: #212529;             /* primary text */
+  --ifm-color-content-secondary: #495057;     /* secondary text */
+  --ifm-border-color: #CED4DA;                /* dividers/borders */
+
+  /* Links / focus */
+  --ifm-link-color: var(--ifm-color-primary);
+  --ifm-link-hover-color: #1A75E6;
+  --ifm-focus-color: rgba(0, 95, 204, 0.35);
+
+  /* Code */
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-code-background: #EFF5FF;             /* inline code bg */
+  --ifm-pre-background: #F3F6FB;              /* fenced code bg */
+  --docusaurus-highlighted-code-line-bg: rgba(0, 95, 204, 0.08);
+
+  /* Components */
+  --ifm-button-border-radius: 10px;
+  --ifm-card-background-color: var(--ifm-background-surface-color);
+  --ifm-toc-border-color: var(--ifm-border-color);
+  --ifm-navbar-background-color: #FFFFFF;
+  --ifm-navbar-link-hover-color: var(--ifm-link-hover-color);
+
+  /* Optional subtle shadow for cards/nav */
+  --shn-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.08);
+  --shn-shadow-md: 0 8px 24px rgba(16, 24, 40, 0.08);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* Elevation polish */
+.theme-doc-markdown .admonition,
+.card,
+.navbar {
+  box-shadow: var(--shn-shadow-sm);
+}
+.card:hover {
+  box-shadow: var(--shn-shadow-md);
+  transition: box-shadow 200ms ease;
+}
+
+/* Make primary buttons pop and meet contrast */
+.button.button--primary {
+  color: var(--ifm-button-color);                 /* text/icon (incl. arrow) */
+  background: var(--ifm-color-primary);
+  border-color: transparent;
+}
+.button.button--primary:hover {
+  background: var(--ifm-color-primary-dark);
+}
+
+/* Inline code readability */
+code {
+  background: var(--ifm-code-background);
+  border-radius: 6px;
+  padding: 0.15em 0.35em;
+}
+
+/* ===== Dark mode ===== */
 [data-theme='dark'] {
-  --ifm-color-primary: #3b82f6;
-  --ifm-color-primary-dark: #2563eb;
-  --ifm-color-primary-darker: #1d4ed8;
-  --ifm-color-primary-darkest: #1e40af;
-  --ifm-color-primary-light: #60a5fa;
-  --ifm-color-primary-lighter: #93c5fd;
-  --ifm-color-primary-lightest: #bfdbfe;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* Brand / primary (lighter on dark bg) */
+  --ifm-color-primary: #3BA7FF;
+  --ifm-color-primary-dark: #1F92F7;
+  --ifm-color-primary-darker: #0E86F0;
+  --ifm-color-primary-darkest: #0A69BC;
+  --ifm-color-primary-light: #6CBFFB;
+  --ifm-color-primary-lighter: #9CD4FE;
+  --ifm-color-primary-lightest: #CDE8FF;
+
+  /* On-primary text for dark theme buttons, badges, etc. */
+  --ifm-color-primary-contrast-foreground: #0B0E14;  /* near-black for AA on light blue */
+  --ifm-button-color: var(--ifm-color-primary-contrast-foreground);
+
+  /* Neutrals */
+  --ifm-background-color: #121217;            /* page */
+  --ifm-background-surface-color: #1E1E28;    /* cards, surfaces */
+  --ifm-font-color-base: #E0E0F0;             /* primary text */
+  --ifm-color-content-secondary: #B8B8C7;     /* secondary text */
+  --ifm-border-color: #282835;                /* dividers/borders */
+
+  /* Links / focus */
+  --ifm-link-color: var(--ifm-color-primary);
+  --ifm-link-hover-color: #6CBFFB;
+  --ifm-focus-color: rgba(59, 167, 255, 0.35);
+
+  /* Code */
+  --ifm-code-background: #10131A;             /* inline code bg */
+  --ifm-pre-background: #0B0E14;              /* fenced code bg */
+  --docusaurus-highlighted-code-line-bg: rgba(59, 167, 255, 0.15);
+
+  /* Components */
+  --ifm-card-background-color: var(--ifm-background-surface-color);
+  --ifm-toc-border-color: var(--ifm-border-color);
+  --ifm-navbar-background-color: #1A1A22;
+  --ifm-navbar-link-hover-color: var(--ifm-link-hover-color);
+}
+
+/* Optional: stronger section separation on homepage */
+.home .hero--primary {
+  background: linear-gradient(180deg, rgba(0, 95, 204, 0.06), rgba(0,0,0,0));
+  border-bottom: 1px solid var(--ifm-border-color);
+}
+
+.footer {
+  border-top: 1px solid var(--ifm-border-color);
 }
