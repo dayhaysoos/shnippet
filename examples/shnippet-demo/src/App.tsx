@@ -90,6 +90,19 @@ function App() {
             </div>
 
             <div className="info-card__section">
+              <h3>Documentation</h3>
+              <p>Ready for the full deep dive? Head back to the official documentation site.</p>
+              <a
+                className="info-card__link"
+                href="https://shnippet.dev"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Visit shnippet.dev
+              </a>
+            </div>
+
+            <div className="info-card__section">
               <h3>Source reference</h3>
               <p>
                 Browse the full project on GitHub or jump straight to the test suite powering these
