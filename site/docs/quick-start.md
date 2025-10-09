@@ -78,6 +78,8 @@ const formattedSnippet = snippetManager.formatSnippet(snippet.content[lang], {
 });
 ```
 
+Shnippet automatically reads `snippets/config.json` to discover the available file extensions, so `updateConfig` is rarely needed. Only call it if you want to override the generated runtime settings (for example, when hosting snippets from a custom CDN).
+
 ## What's Next?
 
 - [Configuration](./configuration) - Learn about all available options
