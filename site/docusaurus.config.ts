@@ -85,6 +85,11 @@ const config: Config = {
         },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
+          href: 'https://demo.shnippet.dev',
+          label: 'Demo',
+          position: 'right',
+        },
+        {
           href: 'https://github.com/dayhaysoos/shnippet',
           label: 'GitHub',
           position: 'right',
