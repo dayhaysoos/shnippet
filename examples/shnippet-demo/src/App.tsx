@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { snippetManager } from 'shnippet';
-import type { SnippetName } from '../snippets/gen-types';
+import type { SnippetName } from '../public/snippets/gen-types';
 import type { SnippetResult } from 'shnippet';
 import { SnippetCard } from './components/SnippetCard';
 
