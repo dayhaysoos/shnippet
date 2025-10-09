@@ -92,15 +92,24 @@ function App() {
             <div className="info-card__section">
               <h3>Source reference</h3>
               <p>
-                Browse the tests and configuration in the repository once it is published to GitHub.
+                Browse the full project on GitHub or jump straight to the test suite powering these
+                snippets.
               </p>
               <a
                 className="info-card__link"
-                href="https://github.com/shnippet/shnippet-demo"
+                href="https://github.com/dayhaysoos/shnippet"
                 target="_blank"
                 rel="noreferrer"
               >
-                View on GitHub
+                View repository
+              </a>
+              <a
+                className="info-card__link"
+                href="https://github.com/dayhaysoos/shnippet/blob/main/examples/shnippet-demo/tests/math.test.ts"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Inspect math tests
               </a>
             </div>
           </div>
