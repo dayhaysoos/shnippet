@@ -51,7 +51,9 @@ type FeatureProps = FeatureItem & {
 function Feature({ title, description, Icon }: FeatureProps) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center"></div>
+      <div className="text--center">
+        <Icon className={styles.featureSvg} role="img" />
+      </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
         <p>{description}</p>
