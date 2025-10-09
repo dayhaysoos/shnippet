@@ -52,17 +52,60 @@ function App() {
         <p>Snippets generated from tests using the Shnippet CLI.</p>
       </header>
 
-      {isLoading ? (
-        <p className="status">Loading snippets…</p>
-      ) : error ? (
-        <p className="status status--error">{error}</p>
-      ) : (
+      <div className="app__content">
         <section className="app__snippets">
-          {snippets.map(({ data, description }) => (
-            <SnippetCard key={data.name} snippet={data} description={description} />
-          ))}
+          {isLoading ? (
+            <p className="status">Loading snippets…</p>
+          ) : error ? (
+            <p className="status status--error">{error}</p>
+          ) : (
+            snippets.map(({ data, description }) => (
+              <SnippetCard key={data.name} snippet={data} description={description} />
+            ))
+          )}
         </section>
-      )}
+
+        <aside className="app__sidebar" aria-label="Project details">
+          <div className="info-card">
+            <h2>How this example works</h2>
+            <p>
+              The tests in both TypeScript and Python are annotated with Shnippet tags. Running the
+              CLI extracts the tagged regions and keeps the language tabs in sync with the generated
+              snippet files.
+            </p>
+
+            <div className="info-card__section">
+              <h3>Try it locally</h3>
+              <ul>
+                <li>
+                  <code>pnpm --filter shnippet-demo test:run</code> — run the Vitest suite
+                </li>
+                <li>
+                  <code>pnpm --filter shnippet-demo test:python</code> — run the Python tests
+                </li>
+                <li>
+                  <code>pnpm --filter shnippet-demo shnippet</code> — regenerate snippets
+                </li>
+              </ul>
+            </div>
+
+            <div className="info-card__section">
+              <h3>Source reference</h3>
+              <p>
+                Browse the tests and configuration in the repository once it is published to GitHub.
+              </p>
+              <a
+                className="info-card__link"
+                href="https://github.com/shnippet/shnippet-demo"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View on GitHub
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
     </main>
   );
 }
