@@ -1,7 +1,7 @@
 export const config = {
   rootDirectory: './tests',
   snippetOutputDirectory: './snippets',
-  fileExtensions: ['.ts'],
+  fileExtensions: ['.ts', '.py'],
   exclude: [],
   snippetTags: {
     start: ':snippet-start:',

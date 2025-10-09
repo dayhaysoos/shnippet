@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
+    "test:python": "python3 -m unittest discover -s tests/python -p 'test_*.py'",
     "shnippet": "shnippet --config shnippet.config.ts"
   },
   "dependencies": {
