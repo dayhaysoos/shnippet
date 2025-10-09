@@ -8,12 +8,6 @@ type FeatureItem = {
   description: ReactNode;
 };
 
-const FeatureIcons: React.ComponentType<React.ComponentProps<'svg'>>[] = [
-  require('@site/static/img/undraw_docusaurus_mountain.svg').default,
-  require('@site/static/img/undraw_docusaurus_tree.svg').default,
-  require('@site/static/img/undraw_docusaurus_react.svg').default,
-];
-
 const FeatureList: FeatureItem[] = [
   {
     title: 'Test-Driven Documentation',
@@ -45,15 +39,17 @@ const FeatureList: FeatureItem[] = [
 ];
 
 type FeatureProps = FeatureItem & {
-  Icon: React.ComponentType<React.ComponentProps<'svg'>>;
+  Icon?: React.ComponentType<React.ComponentProps<'svg'>>;
 };
 
-function Feature({ title, description, Icon }: FeatureProps) {
+function Feature({ title, description, Icon = null }: FeatureProps) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Icon className={styles.featureSvg} role="img" />
-      </div>
+      {Icon && (
+        <div className="text--center">
+          <Icon className={styles.featureSvg} role="img" />
+        </div>
+      )}
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
         <p>{description}</p>
@@ -68,7 +64,7 @@ export default function HomepageFeatures(): ReactNode {
       <div className="container">
         <div className="row">
           {FeatureList.map((props, idx) => (
-            <Feature key={idx} Icon={FeatureIcons[idx % FeatureIcons.length]} {...props} />
+            <Feature key={idx} {...props} />
           ))}
         </div>
       </div>
